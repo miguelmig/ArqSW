@@ -15,8 +15,8 @@ public class UserManager {
 	 */
 	public void registarTrader(String email, String password, String data_nasc) {
 		DAO traderDAO = new TraderDAO();
-		Trader t = new Trader(email, password, data_nasc, 0);
-		// FIXME: 10/11/2019 ver se já existe
+		Trader t = new Trader(-1, email, password, data_nasc, 1000);
+		// FIXME: 10/11/2019 ver se já existe e por o nextID
 		traderDAO.put(email, t);
 	}
 

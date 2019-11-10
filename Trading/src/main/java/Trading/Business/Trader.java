@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Trader {
 
-	Collection<CFD> currentCFDs;
+	List<CFD> currentCFDs;
 	private int id;
 	private String email;
 	private String password;
@@ -12,11 +12,11 @@ public class Trader {
 	private float saldo;
 
 
-	public Collection<CFD> getCurrentCFDs() {
+	public List<CFD> getCurrentCFDs() {
 		return currentCFDs;
 	}
 
-	public void setCurrentCFDs(Collection<CFD> currentCFDs) {
+	public void setCurrentCFDs(List<CFD> currentCFDs) {
 		this.currentCFDs = currentCFDs;
 	}
 
@@ -70,8 +70,8 @@ public class Trader {
 	}
 
 
-	public Trader(String email, String password, String data_nasc, float saldo) {
-		this.id = -1;
+	public Trader(int id, String email, String password, String data_nasc, float saldo) {
+		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.data_nasc = data_nasc;
