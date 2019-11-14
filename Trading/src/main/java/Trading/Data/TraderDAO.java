@@ -37,7 +37,7 @@ public class TraderDAO implements DAO<String, Trader> {
 
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                t.setID(rs.getInt("id_trader"));
+                //t.setID(rs.getInt("id_trader"));
                 t.setEmail(rs.getString("email"));
                 t.setPassword(rs.getString("password"));
                 t.setDataNasc(rs.getString("data_nasc"));

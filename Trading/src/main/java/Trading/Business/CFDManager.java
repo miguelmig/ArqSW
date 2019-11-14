@@ -4,14 +4,15 @@ import java.util.*;
 
 public class CFDManager implements Observer {
 
-	Collection<CFD> openCFDs;
+	Map<String, List<CFD>> openCFDs;
+	LiveStock liveStock;
+	Creator creator;
 
 	/**
 	 * 
-	 * @param trader
 	 * @param cfd
 	 */
-	public void fecharCFD(Trader trader, CFD cfd) {
+	public void fecharCFD(CFD cfd) {
 		// TODO - implement CFDManager.fecharCFD
 		throw new UnsupportedOperationException();
 	}
@@ -30,8 +31,13 @@ public class CFDManager implements Observer {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void update() {
+    @Override
+    public void update(String id_ativo) {
+        float current_price = liveStock.getPrecoAtivo(id_ativo);
 
-	}
+        for(CFD cfd : openCFDs.get(id_ativo)){
+            if(cfd.getTakeProfit() <= current_price || cfd.getStopLoss() >= current_price) fecharCFD(cfd);
+        }
+
+    }
 }

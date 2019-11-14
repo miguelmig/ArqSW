@@ -4,7 +4,7 @@ import java.util.*;
 
 public interface Subject {
 
-	Collection<Observer> getObservers();
+
 
 	/**
 	 * 
@@ -18,6 +18,13 @@ public interface Subject {
 	 */
 	void removeObserver(Observer observer);
 
-	void notifyObservers();
+	/**
+	 * 
+	 * @param id_ativo
+	 */
+	void notifyObservers(String id_ativo);
+
+	Collection<Observer> getObservers();
+
 
 }

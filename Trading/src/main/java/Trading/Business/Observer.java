@@ -2,6 +2,10 @@ package Trading.Business;
 
 public interface Observer {
 
-	void update();
+	/**
+	 * 
+	 * @param id_ativo
+	 */
+	void update(String id_ativo);
 
 }

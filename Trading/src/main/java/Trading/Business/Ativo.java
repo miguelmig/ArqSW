@@ -1,49 +1,39 @@
 package Trading.Business;
 
-public class Ativo {
+public interface Ativo {
 
-	private String id;
-	private float preco_venda;
-	private float preco_compra;
+	String getID();
 
-	public String getID() {
-		return id;
-	}
+	float getPrecoVenda();
 
-	public void setID(String id) {
-		this.id = id;
-	}
+	float getPrecoCompra();
 
-	public float getPrecoVenda() {
-		return preco_venda;
-	}
+	String getNome();
 
-	public void setPrecoVenda(float preco_venda) {
-		this.preco_venda = preco_venda;
-	}
+	/**
+	 * 
+	 * @param id
+	 */
+	void setID(String id);
 
-	public float getPrecoCompra() {
-		return preco_compra;
-	}
+	/**
+	 * 
+	 * @param preco_venda
+	 */
+	void setPrecoVenda(float preco_venda);
 
-	public void setPrecoCompra(float preco_compra) {
-		this.preco_compra = preco_compra;
-	}
+	/**
+	 * 
+	 * @param preco_compra
+	 */
+	void setPrecoCompra(float preco_compra);
 
-	public Ativo(){
-		this.id = "";
-		this.preco_compra = -1;
-		this.preco_venda = 1;
-	}
+	/**
+	 * 
+	 * @param nome
+	 */
+	void setNome(String nome);
 
-	public Ativo(String id, float preco_compra, float preco_venda) {
-		this.id = id;
-		this.preco_venda = preco_venda;
-		this.preco_compra = preco_compra;
-	}
+	String toString();
 
-	@Override
-	public String toString() {
-		return "ID: " + id + "\nVenda: " + preco_venda + "€\nCompra: " + preco_compra + "€\n";
-	}
 }

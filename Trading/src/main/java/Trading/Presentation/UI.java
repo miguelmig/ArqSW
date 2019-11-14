@@ -1,13 +1,14 @@
 package Trading.Presentation;
 
-import Trading.Business.LiveStock;
-import Trading.Business.UserManager;
+import Trading.Business.*;
 
 public class UI {
-    public static void main(String[] args) {
 
-        LiveStock ls = new LiveStock();
+	private static Facade facade;
 
-        ls.refreshMarket();
-    }
+	public static void main(String[] args) {
+		facade = new Facade();
+
+		facade.printPrecos();
+	}
 }
