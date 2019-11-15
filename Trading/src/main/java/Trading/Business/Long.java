@@ -9,11 +9,13 @@ public class Long implements CFD {
     private float unidades;
     private float total;
     private Ativo ativo;
+    private boolean aberto;
+    private Trader trader;
 
 
     @Override
     public Trader getTrader() {
-        return null;
+        return trader;
     }
 
     @Override
@@ -80,4 +82,29 @@ public class Long implements CFD {
 
     }
 
+    @Override
+    public void fecha() {
+        this.aberto = false;
+    }
+
+    @Override
+    public boolean isAberto() {
+        return this.aberto;
+    }
+
+    public Long(int id, float stop_loss, float take_profit, float unidades, float total, Ativo ativo, Trader trader) {
+        this.id = id;
+        this.stop_loss = stop_loss;
+        this.take_profit = take_profit;
+        this.unidades = unidades;
+        this.total = total;
+        this.ativo = ativo;
+        this.aberto = true;
+        this.trader = trader;
+    }
+
+    @Override
+    public String toString() {
+        return "CFD (" + this.getClass().toString() + ")";
+    }
 }

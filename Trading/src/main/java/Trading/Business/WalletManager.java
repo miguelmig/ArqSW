@@ -1,5 +1,7 @@
 package Trading.Business;
 
+import Trading.Data.TraderDAO;
+
 public class WalletManager {
 
 	/**
@@ -8,8 +10,10 @@ public class WalletManager {
 	 * @param valor
 	 */
 	public void adicionarFundos(Trader trader, float valor) {
-		// TODO - implement WalletManager.adicionarFundos
-		throw new UnsupportedOperationException();
+		trader.addSaldo(valor);
+
+		TraderDAO traderDAO = new TraderDAO();
+		traderDAO.put(trader.getEmail(), trader);
 	}
 
 	/**
@@ -18,8 +22,10 @@ public class WalletManager {
 	 * @param valor
 	 */
 	public void removerFundos(Trader trader, float valor) {
-		// TODO - implement WalletManager.removerFundos
-		throw new UnsupportedOperationException();
+		trader.subSaldo(valor);
+
+		TraderDAO traderDAO = new TraderDAO();
+		traderDAO.put(trader.getEmail(), trader);
 	}
 
 }

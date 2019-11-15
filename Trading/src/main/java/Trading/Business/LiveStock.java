@@ -1,5 +1,8 @@
 package Trading.Business;
 
+import Trading.Data.AtivoDAO;
+import Trading.Data.DAO;
+
 import java.util.*;
 
 public class LiveStock implements Subject {
@@ -9,9 +12,20 @@ public class LiveStock implements Subject {
 	LiveAPI liveAPI;
 
 
-	public List<Ativo> getMercado() {
-		// TODO - implement LiveStock.getMercado
-		throw new UnsupportedOperationException();
+	private void initMercado() {
+		AtivoDAO ativoDAO = new AtivoDAO();
+
+		List<Ativo> ativos_list = ativoDAO.list();
+
+		for(Ativo a : ativos_list) {
+			float[] precos = this.liveAPI.getPrecosAtivo(a.getID());
+
+			a.setPrecoVenda(precos[0]);
+			a.setPrecoCompra(precos[1]);
+
+			this.ativos.put(a.getID(), a);
+			System.out.println(a.toString());
+		}
 	}
 
 
@@ -29,7 +43,6 @@ public class LiveStock implements Subject {
 	@Override
 	public void notifyObservers(String id_ativo) {
 		this.observers.forEach(o -> o.update(id_ativo));
-
 	}
 
 	@Override
@@ -37,29 +50,18 @@ public class LiveStock implements Subject {
 		return null;
 	}
 
-
 	public float getPrecoAtivo(String id_ativo) {
 		return this.ativos.get(id_ativo).getPrecoVenda();
 	}
 
+
+
+
 	public LiveStock(){
-		/*
-		DAO ativoDAO = new AtivoDAO();
-		this.ativos = new HashMap<>();
-
-		List<Ativo> ativos_list = ativoDAO.list();
-		for(Ativo a : ativos_list) this.ativos.put(a.getID(), a); */
-
 		this.ativos = new HashMap<>();
 		this.liveAPI = new AlphaVantageAPI();
 
-		Ativo a = new Acao("FB");
-
-		float precos[] = liveAPI.getPrecosAtivo(a.getID());
-		a.setPrecoVenda(precos[0]);
-		a.setPrecoCompra(precos[1]);
-
-		this.ativos.put(a.getID(), a);
+		initMercado();
 	}
 
 

@@ -10,5 +10,7 @@ public class UI {
 		facade = new Facade();
 
 		facade.printPrecos();
+		facade.abrirCFD();
+		facade.fecharCFD();
 	}
 }

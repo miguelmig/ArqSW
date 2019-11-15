@@ -51,7 +51,11 @@ public class AlphaVantageAPI implements LiveAPI {
     }
 
 
-    private float[] parseData(JSONObject jobj){
+	/**
+	 * 
+	 * @param jobj
+	 */
+	private float[] parseData(JSONObject jobj) {
         jobj = (JSONObject)jobj.get("Time Series (1min)");
 
         Collection c = jobj.values();
@@ -65,7 +69,7 @@ public class AlphaVantageAPI implements LiveAPI {
         r[1] = Float.parseFloat(jobj.get("2. high").toString());
 
         return r;
-    }
+	}
 
 
 }

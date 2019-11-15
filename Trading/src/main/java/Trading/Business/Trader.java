@@ -11,7 +11,11 @@ public class Trader {
 	private String data_nasc;
 	private float saldo;
 
-	public List<CFD> getCurrentCFDs() {
+    public Trader(int i, String email, String password, String data_nasc, int i1) {
+    }
+
+
+    public List<CFD> getCurrentCFDs() {
 		return currentCFDs;
 	}
 
@@ -19,11 +23,11 @@ public class Trader {
 		this.currentCFDs = currentCFDs;
 	}
 
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 
@@ -59,5 +63,40 @@ public class Trader {
 		this.saldo = saldo;
 	}
 
+	public Trader() {
+		this.id = -1;
+		this.email = "";
+		this.password = "";
+		this.data_nasc = "";
+		this.saldo = 0;
+		this.currentCFDs = new ArrayList<>();
+	}
 
+
+	public Trader(String email, String password, String data_nasc, float saldo) {
+		this.id = -1;
+		this.email = email;
+		this.password = password;
+		this.data_nasc = data_nasc;
+		this.saldo = saldo;
+		this.currentCFDs = new ArrayList<>();
+	}
+
+
+	/**
+	 * 
+	 * @param valor
+	 */
+	public void addSalto(float valor) {
+		this.saldo += valor;
+	}
+
+	/**
+	 *
+	 * @param valor
+	 */
+    public void subSaldo(float valor) {
+		this.saldo -= valor;
+
+	}
 }

@@ -48,4 +48,8 @@ public interface CFD {
 
 	void calculaTotal();
 
+    void fecha();
+
+	boolean isAberto();
+
 }
