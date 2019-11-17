@@ -4,7 +4,9 @@ import Trading.Business.*;
 import com.mysql.cj.jdbc.ConnectionImpl;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AtivoDAO implements DAO<String, Ativo> {
@@ -43,12 +45,39 @@ public class AtivoDAO implements DAO<String, Ativo> {
 
     @Override
     public List<Ativo> list() {
-        return null;
+        try {
+            List<Ativo> ativos = new ArrayList<>();
+            DBConnection sql = ConnectionManager.getConnection();
+
+            PreparedStatement s = sql.prepareStatement("SELECT * FROM ativo");
+
+            ResultSet rs = sql.returnQuery(s);
+            while (rs.next()){
+                String id = rs.getString("id_ativo");
+                String nome = rs.getString("nome");
+                boolean comodity = rs.getBoolean("comodity");
+                if(comodity)
+                    ativos.add(new Comodity(id, nome, 0, 0));
+                else
+                    ativos.add(new Acao(id, nome, 0, 0));
+            }
+
+            return ativos;
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public void remove(String id)
     {
 
+    }
+
+    @Override
+    public int size() {
+        return 0;
     }
 }

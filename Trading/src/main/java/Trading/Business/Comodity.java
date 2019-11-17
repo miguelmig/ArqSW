@@ -46,4 +46,16 @@ public class Comodity implements Ativo {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    @Override
+    public String toString() {
+        return this.id + "\nPreco: " + this.preco_compra;
+    }
+
+    public Comodity(String id, String nome, float preco_compra, float preco_venda){
+        this.id = id;
+        this.nome = nome;
+        this.preco_compra = preco_compra;
+        this.preco_venda = preco_venda;
+    }
 }

@@ -83,13 +83,6 @@ public class Trader {
 	}
 
 
-	/**
-	 * 
-	 * @param valor
-	 */
-	public void addSalto(float valor) {
-		this.saldo += valor;
-	}
 
 	/**
 	 *
@@ -99,4 +92,8 @@ public class Trader {
 		this.saldo -= valor;
 
 	}
+
+    public void addSaldo(float valor) {
+		this.saldo += valor;
+    }
 }

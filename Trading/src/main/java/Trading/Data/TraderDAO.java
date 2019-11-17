@@ -64,4 +64,9 @@ public class TraderDAO implements DAO<String, Trader> {
     public void remove(String email) {
 
     }
+
+    @Override
+    public int size() {
+        return 0;
+    }
 }

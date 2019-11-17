@@ -24,4 +24,9 @@ public class CFDDAO implements DAO<Integer, CFD> {
     public void remove(Integer integer) {
 
     }
+
+    @Override
+    public int size() {
+        return 0;
+    }
 }

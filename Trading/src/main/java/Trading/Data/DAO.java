@@ -25,4 +25,7 @@ public interface DAO<K, T> {
 	 */
 	void remove(K k);
 
+
+	int size();
+
 }

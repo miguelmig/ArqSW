@@ -17,38 +17,37 @@ public class CFDManager implements Observer {
 	 * @param id_cfd
 	 */
 	public void fecharCFD(int id_cfd) {
-		CFD cfd = this.openCFDs.get("teste").get(0);
+		CFDDAO cfdDAO = new CFDDAO();
+		CFD cfd = cfdDAO.get(id_cfd);
+
 		Trader t = cfd.getTrader();
 		float total = cfd.getTotal();
 
 		System.out.println("*** Antes de vender ***\nSaldo: " + t.getSaldo() + "\nCFD: " + cfd.isAberto());
 
 		t.addSaldo(total);
-		cfd.setAberto(false);
+		cfd.fecha();
 
 		System.out.println("*** Depois de vender ***\nSaldo: " + t.getSaldo() + "\nCFD: " + cfd.isAberto());
 
-
-		/*
 		DAO traderDAO = new TraderDAO();
 		traderDAO.put(t.getID(), t);
 
-		DAO cfdDAO = new CFDDAO();
-		cfdDAO.put(cfd.getID(), cfd);*/
+		cfdDAO.put(cfd.getID(), cfd);
 	}
 
 	/**
 	 * 
 	 * @param trader
 	 * @param ativo
-	 * @param quantia
+	 * @param valor
 	 * @param tipo
 	 * @param sl
 	 * @param tp
 	 */
-	public void abrirCFD(Trader trader, Ativo ativo, float quantia, int tipo, int sl, int tp) {
-		CFD cfd = this.creator.factoryMethod("Long", trader);
-		this.openCFDs.put("teste", new ArrayList<CFD>(Arrays.asList(cfd)));
+	public void abrirCFD(Trader trader, Ativo ativo, float unidades, String tipo, float stop_loss, float take_profit) {
+		CFD cfd = this.creator.factoryMethod(trader, ativo, unidades, tipo, stop_loss, take_profit);
+		addCFDtoMap(cfd);
 		System.out.println(cfd.toString());
 	}
 
@@ -62,9 +61,14 @@ public class CFDManager implements Observer {
 
     }
 
-    public CFDManager(){
+    private void addCFDtoMap(CFD cfd){
+		List<CFD> l = this.openCFDs.get(cfd.getAtivo().getID());
+		l.add(cfd);
+	}
+
+    public CFDManager(LiveStock ls){
 		this.creator = new Creator();
 		this.openCFDs = new HashMap<>();
-		this.liveStock = new LiveStock();
+		this.liveStock = ls;
 	}
 }

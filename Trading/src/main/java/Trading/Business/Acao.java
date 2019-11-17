@@ -52,7 +52,10 @@ public class Acao implements Ativo {
         return this.id + "\nPreco: " + this.preco_compra;
     }
 
-    public Acao(String id){
+    public Acao(String id, String nome, float preco_compra, float preco_venda){
         this.id = id;
+        this.nome = nome;
+        this.preco_compra = preco_compra;
+        this.preco_venda = preco_venda;
     }
 }

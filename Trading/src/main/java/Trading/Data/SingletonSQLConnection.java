@@ -35,7 +35,12 @@ public class SingletonSQLConnection implements DBConnection
 
     @Override
     public ResultSet returnQuery(PreparedStatement s) {
-        return null;
+        try {
+            return s.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
