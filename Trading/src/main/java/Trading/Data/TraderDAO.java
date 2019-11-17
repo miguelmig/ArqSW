@@ -3,6 +3,7 @@ package Trading.Data;
 import Trading.Business.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TraderDAO implements DAO<String, Trader> {
@@ -29,23 +30,40 @@ public class TraderDAO implements DAO<String, Trader> {
     @Override
     public Trader get(String email) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/trading","root","123456");
+            DBConnection con = ConnectionManager.getConnection();
             Trader t = new Trader();
 
             PreparedStatement ps = con.prepareStatement("SELECT * FROM trader WHERE email = ?");
             ps.setString(1, email);
 
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = con.returnQuery(ps);
             if(rs.next()){
                 //t.setID(rs.getInt("id_trader"));
                 t.setEmail(rs.getString("email"));
                 t.setPassword(rs.getString("password"));
                 t.setDataNasc(rs.getString("data_nasc"));
                 t.setSaldo(rs.getFloat("saldo"));
-                // FIXME: 10/11/2019 FALTAM OS CFDS
+
+                PreparedStatement ps2 = con.prepareStatement("SELECT * FROM cfd WHERE trader_id = ?");
+                ps2.setInt(1, rs.getInt("id_trader"));
+                ResultSet cfds_rs = con.returnQuery(ps2);
+                List<CFD> cfds = new ArrayList<>();
+                while(cfds_rs.next())
+                {
+                    float stop_loss = rs.getFloat("stop_loss");
+                    float take_profit = rs.getFloat("take_profit");
+                    float unidades = rs.getFloat("unidades");
+                    float total = rs.getFloat("total");
+                    boolean closed = rs.getBoolean("closed");
+                    String id_ativo = rs.getString("ativo_id");
+                    int id_trader = rs.getInt("trader_id");
+
+                    // FIXME 17/11/2019: COMO INSTANCIAR OS CFDS?
+                }
+
                 return t;
             }
-            con.close();
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -67,6 +85,27 @@ public class TraderDAO implements DAO<String, Trader> {
 
     @Override
     public int size() {
-        return 0;
+        try
+        {
+            DBConnection sql = ConnectionManager.getConnection();
+
+            PreparedStatement s = sql.prepareStatement("SELECT COUNT(*) FROM trader");
+            ResultSet rs = sql.returnQuery(s);
+            if (rs.next())
+            {
+                Integer count = rs.getInt(0);
+                return count;
+            }
+            else {
+                return 0;
+            }
+
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+
     }
 }

@@ -40,7 +40,30 @@ public class AtivoDAO implements DAO<String, Ativo> {
 
     @Override
     public Ativo get(String id) {
-        return null;
+        try {
+            DBConnection sql = ConnectionManager.getConnection();
+
+            PreparedStatement s = sql.prepareStatement("SELECT * FROM ativo WHERE id_ativo = ?");
+            s.setString(1, id);
+
+            ResultSet rs = sql.returnQuery(s);
+            if (rs.next())
+            {
+                String nome = rs.getString("nome");
+                boolean comodity = rs.getBoolean("comodity");
+                if(comodity)
+                    return new Comodity(id, nome, 0, 0);
+                else
+                    return new Acao(id, nome, 0, 0);
+            }
+            else {
+                return null;
+            }
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -73,11 +96,43 @@ public class AtivoDAO implements DAO<String, Ativo> {
     @Override
     public void remove(String id)
     {
+        try
+        {
+            DBConnection sql = ConnectionManager.getConnection();
 
+            PreparedStatement s = sql.prepareStatement("DELETE FROM ativo WHERE id_ativo = ?");
+            s.setString(1, id);
+
+            sql.query(s);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public int size() {
-        return 0;
+    public int size()
+    {
+        try
+        {
+            DBConnection sql = ConnectionManager.getConnection();
+
+            PreparedStatement s = sql.prepareStatement("SELECT COUNT(*) FROM ativo");
+            ResultSet rs = sql.returnQuery(s);
+            if (rs.next())
+            {
+                Integer count = rs.getInt(0);
+                return count;
+            }
+            else {
+                return 0;
+            }
+
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }
