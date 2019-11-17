@@ -7,9 +7,10 @@ public class UserManager {
 
 	public void registarTrader(String email, String password, String data_nasc) {
 		DAO traderDAO = new TraderDAO();
-		Trader t = new Trader(-1, email, password, data_nasc, 0);
+		int next_id = traderDAO.size() + 1 ;
+		Trader t = new Trader(next_id, email, password, data_nasc, 1000);
 		// FIXME: 10/11/2019 ver se já existe
-		traderDAO.put(email, t);
+		traderDAO.put(next_id, t);
 	}
 
 	/**

@@ -28,12 +28,9 @@ public class AtivoDAO implements DAO<String, Ativo> {
                 s.cancel();
                 return;
             }
-
             sql.query(s);
-
         }
-        catch(SQLException e)
-        {
+        catch(SQLException e) {
             e.printStackTrace();
         }
     }
@@ -47,8 +44,7 @@ public class AtivoDAO implements DAO<String, Ativo> {
             s.setString(1, id);
 
             ResultSet rs = sql.returnQuery(s);
-            if (rs.next())
-            {
+            if (rs.next()) {
                 String nome = rs.getString("nome");
                 boolean comodity = rs.getBoolean("comodity");
                 if(comodity)
@@ -111,26 +107,20 @@ public class AtivoDAO implements DAO<String, Ativo> {
     }
 
     @Override
-    public int size()
-    {
-        try
-        {
+    public int size() {
+        try {
             DBConnection sql = ConnectionManager.getConnection();
 
             PreparedStatement s = sql.prepareStatement("SELECT COUNT(*) FROM ativo");
             ResultSet rs = sql.returnQuery(s);
-            if (rs.next())
-            {
-                Integer count = rs.getInt(0);
-                return count;
+            if (rs.next()) {
+                return rs.getInt(1);
             }
             else {
                 return 0;
             }
-
         }
-        catch(SQLException e)
-        {
+        catch(SQLException e) {
             e.printStackTrace();
             return 0;
         }

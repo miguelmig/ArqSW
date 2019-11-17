@@ -4,14 +4,15 @@ import Trading.Business.*;
 
 public class UI {
 
-	private static Facade facade;
 
 	public static void main(String[] args) {
-		facade = new Facade();
+		Facade facade = new Facade();
 
-		facade.registaTrader("teste", "teste", "teste");
+		//facade.registaTrader("teste", "teste", "teste");
 		facade.printPrecos();
-		facade.abrirCFD("teste", "APPL", "long", 1, 100, 200);
-		facade.fecharCFD();
+		//facade.abrirCFD(1, "AAPL", "long", 1, 100, 200);
+		//facade.fecharCFD(1);
+		facade.adicionaFundos(1, 100);
+		facade.levantaFundos(1, 200);
 	}
 }

@@ -1,22 +1,27 @@
 package Trading.Data;
 
 import Trading.Business.*;
+import Trading.Business.Long;
+import Trading.Business.Short;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TraderDAO implements DAO<String, Trader> {
+public class TraderDAO implements DAO<Integer, Trader> {
     @Override
-    public void put(String email, Trader t) {
+    public void put(Integer id, Trader trader) {
         try {
-            Connection con= DriverManager.getConnection("jdbc:mysql://localhost:3306/trading","root","123456");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/trading","root","123456");
 
-            PreparedStatement s = con.prepareStatement("INSERT INTO trader (email, password, data_nasc, saldo) VALUES (?, ?, ?, ?)");
-            s.setString(1, email);
-            s.setString(2, t.getPassword());
-            s.setString(3, t.getDataNasc());
-            s.setFloat(4, t.getSaldo());
+            PreparedStatement s = con.prepareStatement("INSERT INTO trader (id_trader, email, password, data_nasc, saldo) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE saldo = ?");
+            s.setInt(1, id);
+            s.setString(2, trader.getEmail());
+            s.setString(3, trader.getPassword());
+            s.setString(4, trader.getDataNasc());
+            s.setFloat(5, trader.getSaldo());
+
+            s.setFloat(6, trader.getSaldo());
 
             s.execute();
 
@@ -28,40 +33,46 @@ public class TraderDAO implements DAO<String, Trader> {
     }
 
     @Override
-    public Trader get(String email) {
+    public Trader get(Integer id_trader) {
         try {
             DBConnection con = ConnectionManager.getConnection();
-            Trader t = new Trader();
+            Trader trader = new Trader();
 
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM trader WHERE email = ?");
-            ps.setString(1, email);
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM trader WHERE id_trader = ?");
+            ps.setInt(1, id_trader);
 
             ResultSet rs = con.returnQuery(ps);
             if(rs.next()){
-                //t.setID(rs.getInt("id_trader"));
-                t.setEmail(rs.getString("email"));
-                t.setPassword(rs.getString("password"));
-                t.setDataNasc(rs.getString("data_nasc"));
-                t.setSaldo(rs.getFloat("saldo"));
+                trader.setID(rs.getInt("id_trader"));
+                trader.setEmail(rs.getString("email"));
+                trader.setPassword(rs.getString("password"));
+                trader.setDataNasc(rs.getString("data_nasc"));
+                trader.setSaldo(rs.getFloat("saldo"));
 
                 PreparedStatement ps2 = con.prepareStatement("SELECT * FROM cfd WHERE trader_id = ?");
                 ps2.setInt(1, rs.getInt("id_trader"));
                 ResultSet cfds_rs = con.returnQuery(ps2);
                 List<CFD> cfds = new ArrayList<>();
-                while(cfds_rs.next())
-                {
-                    float stop_loss = rs.getFloat("stop_loss");
-                    float take_profit = rs.getFloat("take_profit");
-                    float unidades = rs.getFloat("unidades");
-                    float total = rs.getFloat("total");
-                    boolean closed = rs.getBoolean("closed");
-                    String id_ativo = rs.getString("ativo_id");
-                    int id_trader = rs.getInt("trader_id");
+                while(cfds_rs.next()) {
+                    float stop_loss = cfds_rs.getFloat("stop_loss");
+                    float take_profit = cfds_rs.getFloat("take_profit");
+                    float unidades = cfds_rs.getFloat("unidades");
+                    float total = cfds_rs.getFloat("total");
+                    boolean closed = cfds_rs.getBoolean("closed");
+                    String id_ativo = cfds_rs.getString("ativo_id");
+                    Ativo ativo = this.getAtivo(id_ativo);
+                    boolean is_long = cfds_rs.getBoolean("is_long");
 
-                    // FIXME 17/11/2019: COMO INSTANCIAR OS CFDS?
+                    CFD cfd;
+                    if(is_long) cfd = new Long(id_trader , stop_loss, take_profit, unidades, total, ativo, trader);
+                    else  cfd = new Short(id_trader , stop_loss, take_profit, unidades, total, ativo, trader);
+
+                    cfds.add(cfd);
                 }
 
-                return t;
+                trader.setCurrentCFDs(cfds);
+
+                return trader;
             }
 
 
@@ -79,33 +90,32 @@ public class TraderDAO implements DAO<String, Trader> {
     }
 
     @Override
-    public void remove(String email) {
+    public void remove(Integer id) {
 
     }
 
     @Override
     public int size() {
-        try
-        {
+        try {
             DBConnection sql = ConnectionManager.getConnection();
 
             PreparedStatement s = sql.prepareStatement("SELECT COUNT(*) FROM trader");
             ResultSet rs = sql.returnQuery(s);
-            if (rs.next())
-            {
-                Integer count = rs.getInt(0);
-                return count;
+            if (rs.next()) {
+                return rs.getInt(1);
             }
             else {
                 return 0;
             }
 
         }
-        catch(SQLException e)
-        {
+        catch(SQLException e) {
             e.printStackTrace();
             return 0;
         }
-
+    }
+    private Ativo getAtivo(String id_ativo) {
+        AtivoDAO ativoDAO = new AtivoDAO();
+        return ativoDAO.get(id_ativo);
     }
 }

@@ -5,27 +5,29 @@ import Trading.Data.TraderDAO;
 public class WalletManager {
 
 	/**
-	 * 
-	 * @param trader
+	 *  @param email
 	 * @param valor
 	 */
-	public void adicionarFundos(Trader trader, float valor) {
+	public void adicionarFundos(int id_trader, float valor) {
+		TraderDAO traderDAO = new TraderDAO();
+		Trader trader = traderDAO.get(id_trader);
+
 		trader.addSaldo(valor);
 
-		TraderDAO traderDAO = new TraderDAO();
-		traderDAO.put(trader.getEmail(), trader);
+		traderDAO.put(id_trader, trader);
 	}
 
 	/**
-	 * 
-	 * @param trader
+	 *  @param email
 	 * @param valor
-	 */
-	public void removerFundos(Trader trader, float valor) {
+     */
+	public void removerFundos(int id_trader, float valor) {
+		TraderDAO traderDAO = new TraderDAO();
+		Trader trader = traderDAO.get(id_trader);
+
 		trader.subSaldo(valor);
 
-		TraderDAO traderDAO = new TraderDAO();
-		traderDAO.put(trader.getEmail(), trader);
+		traderDAO.put(id_trader, trader);
 	}
 
 }

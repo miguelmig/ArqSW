@@ -11,11 +11,10 @@ public class Trader {
 	private String data_nasc;
 	private float saldo;
 
-    public Trader(int i, String email, String password, String data_nasc, int i1) {
-    }
 
 
-    public List<CFD> getCurrentCFDs() {
+
+	public List<CFD> getCurrentCFDs() {
 		return currentCFDs;
 	}
 
@@ -73,8 +72,8 @@ public class Trader {
 	}
 
 
-	public Trader(String email, String password, String data_nasc, float saldo) {
-		this.id = -1;
+	public Trader(int id, String email, String password, String data_nasc, float saldo) {
+		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.data_nasc = data_nasc;

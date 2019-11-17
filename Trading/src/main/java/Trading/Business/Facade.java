@@ -13,27 +13,59 @@ public class Facade {
         for(Ativo a : liveStock.ativos.values()) System.out.println(a.toString());
     }
 
-    public void abrirCFD(String email, String id_ativo, String tipo, float unidades, float stop_loss, float take_profit){
+
+
+    /********************** CFD MANAGER **********************/
+
+    public void abrirCFD(int id_trader, String id_ativo, String tipo, float unidades, float stop_loss, float take_profit){
         TraderDAO traderDAO = new TraderDAO();
 
-        Trader trader = traderDAO.get(email);
+        Trader trader = traderDAO.get(id_trader);
+
+        System.out.println(this.liveStock.ativos.size());
+
         Ativo ativo = liveStock.ativos.get(id_ativo);
 
         this.CFDManager.abrirCFD(trader, ativo, unidades, tipo, stop_loss, take_profit);
     }
 
-    public void fecharCFD(){
-        this.CFDManager.fecharCFD(0);
+    public void fecharCFD(int id_cfd){
+        this.CFDManager.fecharCFD(id_cfd);
     }
 
+
+
+    /********************** USER MANAGER **********************/
 
     public void registaTrader(String email, String password, String data_nasc) {
         this.userManager.registarTrader(email, password, data_nasc);
     }
 
+    public int login(String email, String password) {
+        this.userManager.login(email, password);
+        return 0;
+    }
+
+
+
+
+    /********************** WALLET MANAGER **********************/
+
+    public void levantaFundos(int id_trader, float valor){
+        this.walletManager.removerFundos(id_trader, valor);
+    }
+
+    public void adicionaFundos(int id_trader, float valor){
+        this.walletManager.adicionarFundos(id_trader, valor);
+    }
+
+
+
+
     public Facade(){
         this.liveStock = new LiveStock();
         this.CFDManager = new CFDManager(this.liveStock);
         this.userManager = new UserManager();
+        this.walletManager = new WalletManager();
     }
 }

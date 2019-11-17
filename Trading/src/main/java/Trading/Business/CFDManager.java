@@ -62,8 +62,11 @@ public class CFDManager implements Observer {
     }
 
     private void addCFDtoMap(CFD cfd){
-		List<CFD> l = this.openCFDs.get(cfd.getAtivo().getID());
+		List<CFD> l = this.openCFDs.getOrDefault(cfd.getAtivo().getID(), new ArrayList<>());
 		l.add(cfd);
+
+		CFDDAO cfdDAO = new CFDDAO();
+		cfdDAO.put(cfd.getID(), cfd);
 	}
 
     public CFDManager(LiveStock ls){
