@@ -4,6 +4,9 @@ import Trading.Data.AtivoDAO;
 import Trading.Data.DAO;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class LiveStock implements Subject {
 
@@ -16,7 +19,7 @@ public class LiveStock implements Subject {
 		AtivoDAO ativoDAO = new AtivoDAO();
 
 		List<Ativo> ativos_list = ativoDAO.list();
-
+		System.err.println("A ATUALIZAR ATIVOS");
 		for(Ativo a : ativos_list) {
 			float[] precos = this.liveAPI.getPrecosAtivo(a.getID());
 
@@ -24,7 +27,7 @@ public class LiveStock implements Subject {
 			a.setPrecoCompra(precos[1]);
 
 			this.ativos.put(a.getID(), a);
-			System.out.println(a.toString());
+			System.err.print(a.toString());
 		}
 	}
 
@@ -50,6 +53,8 @@ public class LiveStock implements Subject {
 		return null;
 	}
 
+
+	// FIXME: 19/11/2019 ESTE PREÇO DEVE TER EM CONTA SE O CFD FOI LONG OU SHORT?
 	public float getPrecoAtivo(String id_ativo) {
 		return this.ativos.get(id_ativo).getPrecoVenda();
 	}
@@ -61,8 +66,17 @@ public class LiveStock implements Subject {
 		this.ativos = new HashMap<>();
 		this.liveAPI = new AlphaVantageAPI();
 
-		initMercado();
+		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+		exec.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				initMercado();
+			}
+		}, 0, 65, TimeUnit.SECONDS);
 	}
 
 
+	public List<Ativo> getAtivos() {
+		return new ArrayList<>(this.ativos.values());
+	}
 }

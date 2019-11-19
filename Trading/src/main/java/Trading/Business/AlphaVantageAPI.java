@@ -62,7 +62,7 @@ public class AlphaVantageAPI implements LiveAPI {
 
         jobj = (JSONObject) (c.toArray())[0];
 
-        System.out.println(jobj);
+        //System.out.println(jobj);
 
         float r[] = new float[2];
         r[0] = Float.parseFloat(jobj.get("3. low").toString());

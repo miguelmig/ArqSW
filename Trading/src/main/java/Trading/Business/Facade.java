@@ -2,6 +2,8 @@ package Trading.Business;
 
 import Trading.Data.TraderDAO;
 
+import java.util.List;
+
 public class Facade {
 
 	UserManager userManager;
@@ -13,6 +15,15 @@ public class Facade {
         for(Ativo a : liveStock.ativos.values()) System.out.println(a.toString());
     }
 
+    /********************** Live Stock **********************/
+    public String getMercado() {
+        StringBuilder sb = new StringBuilder();
+        List<Ativo> ativos = this.liveStock.getAtivos();
+        for(Ativo a : ativos)
+            sb.append(a.toString());
+
+        return sb.toString();
+    }
 
 
     /********************** CFD MANAGER **********************/
@@ -42,8 +53,7 @@ public class Facade {
     }
 
     public int login(String email, String password) {
-        this.userManager.login(email, password);
-        return 0;
+        return this.userManager.login(email, password);
     }
 
 
@@ -68,4 +78,6 @@ public class Facade {
         this.userManager = new UserManager();
         this.walletManager = new WalletManager();
     }
+
+
 }

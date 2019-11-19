@@ -118,4 +118,32 @@ public class TraderDAO implements DAO<Integer, Trader> {
         AtivoDAO ativoDAO = new AtivoDAO();
         return ativoDAO.get(id_ativo);
     }
+
+    public Trader getByEmail(String email) {
+        try {
+            DBConnection con = ConnectionManager.getConnection();
+            Trader trader = new Trader();
+
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM trader WHERE email = ?");
+
+            ps.setString(1, email);
+
+
+            ResultSet rs = con.returnQuery(ps);
+            if (rs.next()) {
+                trader.setID(rs.getInt("id_trader"));
+                trader.setEmail(rs.getString("email"));
+                trader.setPassword(rs.getString("password"));
+                trader.setDataNasc(rs.getString("data_nasc"));
+                trader.setSaldo(rs.getFloat("saldo"));
+            }
+
+            return trader;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

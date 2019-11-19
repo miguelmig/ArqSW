@@ -19,12 +19,12 @@ public class UserManager {
 	 * @param password
 	 */
 	public int login(String email, String password) {
-		DAO traderDAO = new TraderDAO();
+		TraderDAO traderDAO = new TraderDAO();
 
-		Trader t = (Trader) traderDAO.get(email);
+		Trader t = (Trader) traderDAO.getByEmail(email);
 
-		if(t.getPassword().equals(password)) return 1;
-		else return 0;
+		if(t.getPassword().equals(password)) return t.getID();
+		else return -1;
 	}
 
 }

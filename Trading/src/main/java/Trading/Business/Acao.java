@@ -49,7 +49,7 @@ public class Acao implements Ativo {
 
     @Override
     public String toString() {
-        return this.id + "\nPreco: " + this.preco_compra;
+        return this.id + "   |   Preco compra: " + this.preco_compra + "   |   Preco venda: " + this.preco_venda + "   |   " + this.nome + "\n";
     }
 
     public Acao(String id, String nome, float preco_compra, float preco_venda){
