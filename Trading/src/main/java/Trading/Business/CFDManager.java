@@ -36,15 +36,7 @@ public class CFDManager implements Observer {
 		cfdDAO.put(cfd.getID(), cfd);
 	}
 
-	/**
-	 * 
-	 * @param trader
-	 * @param ativo
-	 * @param valor
-	 * @param tipo
-	 * @param sl
-	 * @param tp
-	 */
+
 	public void abrirCFD(Trader trader, Ativo ativo, float unidades, String tipo, float stop_loss, float take_profit) {
 		CFD cfd = this.creator.factoryMethod(trader, ativo, unidades, tipo, stop_loss, take_profit);
 		addCFDtoMap(cfd);

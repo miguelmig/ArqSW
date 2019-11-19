@@ -5,7 +5,7 @@ import Trading.Data.TraderDAO;
 public class WalletManager {
 
 	/**
-	 *  @param email
+	 *  @param id_trader
 	 * @param valor
 	 */
 	public void adicionarFundos(int id_trader, float valor) {
@@ -18,7 +18,7 @@ public class WalletManager {
 	}
 
 	/**
-	 *  @param email
+	 *  @param id_trader
 	 * @param valor
      */
 	public void removerFundos(int id_trader, float valor) {
