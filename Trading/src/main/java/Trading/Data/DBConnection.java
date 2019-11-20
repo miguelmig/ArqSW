@@ -5,13 +5,9 @@ import java.sql.ResultSet;
 
 public interface DBConnection
 {
-    public void openConnection();
+    void query(PreparedStatement s);
 
-    public void query(PreparedStatement s);
+    ResultSet returnQuery(PreparedStatement s);
 
-    public ResultSet returnQuery(PreparedStatement s);
-
-    public void closeConnection();
-
-    public PreparedStatement prepareStatement(String s);
+    PreparedStatement prepareStatement(String s);
 }
