@@ -18,7 +18,7 @@ public class SingletonSQLConnectionPool
     // It's a singleton so we hide the constructor
     private SingletonSQLConnectionPool()
     {
-        this.conns = new Connection[this.MAX_CONNECTIONS];
+        this.conns = new Connection[MAX_CONNECTIONS];
         this.openConnections();
     }
 
@@ -54,7 +54,9 @@ public class SingletonSQLConnectionPool
             {
                 this.conns[this.current_conn] = DriverManager.getConnection(this.uri, this.user, this.password);
             }
-            return new SQLConnection(this.conns[this.current_conn++]);
+            SQLConnection conn_wraped = new SQLConnection(this.conns[this.current_conn]);
+            this.current_conn = (this.current_conn + 1) % MAX_CONNECTIONS;
+            return conn_wraped;
         }
         catch(SQLException e)
         {
@@ -62,7 +64,9 @@ public class SingletonSQLConnectionPool
             try
             {
                 this.conns[this.current_conn] = DriverManager.getConnection(this.uri, this.user, this.password);
-                return new SQLConnection(this.conns[this.current_conn++]);
+                SQLConnection conn_wraped = new SQLConnection(this.conns[this.current_conn]);
+                this.current_conn = (this.current_conn + 1) % MAX_CONNECTIONS;
+                return conn_wraped;
             }
             catch(SQLException ex)
             {
