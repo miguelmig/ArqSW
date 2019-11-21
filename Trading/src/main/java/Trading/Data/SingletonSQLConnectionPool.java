@@ -54,9 +54,9 @@ public class SingletonSQLConnectionPool
             {
                 this.conns[this.current_conn] = DriverManager.getConnection(this.uri, this.user, this.password);
             }
-            SQLConnection conn_wraped = new SQLConnection(this.conns[this.current_conn]);
+            SQLConnection conn_wrapped = new SQLConnection(this.conns[this.current_conn]);
             this.current_conn = (this.current_conn + 1) % MAX_CONNECTIONS;
-            return conn_wraped;
+            return conn_wrapped;
         }
         catch(SQLException e)
         {
@@ -64,9 +64,9 @@ public class SingletonSQLConnectionPool
             try
             {
                 this.conns[this.current_conn] = DriverManager.getConnection(this.uri, this.user, this.password);
-                SQLConnection conn_wraped = new SQLConnection(this.conns[this.current_conn]);
+                SQLConnection conn_wrapped = new SQLConnection(this.conns[this.current_conn]);
                 this.current_conn = (this.current_conn + 1) % MAX_CONNECTIONS;
-                return conn_wraped;
+                return conn_wrapped;
             }
             catch(SQLException ex)
             {
