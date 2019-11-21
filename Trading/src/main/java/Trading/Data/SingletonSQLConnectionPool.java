@@ -18,6 +18,7 @@ public class SingletonSQLConnectionPool
     // It's a singleton so we hide the constructor
     private SingletonSQLConnectionPool()
     {
+        this.conns = new Connection[this.MAX_CONNECTIONS];
         this.openConnections();
     }
 
