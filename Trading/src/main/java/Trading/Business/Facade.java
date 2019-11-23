@@ -39,6 +39,13 @@ public class Facade {
         this.CFDManager.fecharCFD(id_cfd);
     }
 
+    public List<CFD> historicoTrader(int id_trader){
+        return this.CFDManager.getHistoricoTrader(id_trader);
+    }
+
+    public List<CFD> getPortfolioTrader(int id_trader) {
+        return this.CFDManager.getPortfolioTrader(id_trader);
+    }
 
 
     /********************** USER MANAGER **********************/
@@ -64,6 +71,9 @@ public class Facade {
         this.walletManager.adicionarFundos(id_trader, valor);
     }
 
+    public float getSaldoTrader(int id_trader) {
+        return this.walletManager.getSaldoTrader(id_trader);
+    }
 
 
 
@@ -75,10 +85,5 @@ public class Facade {
     }
 
 
-    public float getSaldo(int id_trader) {
-        DAO<Integer, Trader> traderDAO = new TraderDAO();
-        Trader trader = traderDAO.get(id_trader);
 
-        return trader.getSaldo();
-    }
 }

@@ -182,15 +182,24 @@ public class UI {
     }
 
     private void execPortfolio() {
+        List<CFD> portfolio = facade.getPortfolioTrader(id_trader);
+
+        for(CFD cfd : portfolio){
+            System.out.print(cfd.toString());
+        }
 
     }
 
     private void execHistorico() {
+        List<CFD> historico = facade.getPortfolioTrader(id_trader);
 
+        for(CFD cfd : historico){
+            System.out.print(cfd.toString());
+        }
     }
 
     private void execSaldo() {
-        float saldo = facade.getSaldo(id_trader);
+        float saldo = facade.getSaldoTrader(id_trader);
 
         System.out.println("O seu saldo é: " + saldo + "€");
 

@@ -52,20 +52,27 @@ public class CFDManager implements Observer {
     private void addCFDtoMap(CFD cfd){
 		List<CFD> l = this.openCFDs.getOrDefault(cfd.getAtivo().getID(), new ArrayList<>());
 		l.add(cfd);
+		this.traderCFDManager.addCFD(cfd);
 
 		CFDDAO cfdDAO = new CFDDAO();
 		cfdDAO.put(cfd.getID(), cfd);
 	}
 
-	public List<CFD> getPortfolio(String email)
-	{
-		return this.traderCFDManager.getPortfolio(email);
+
+	public List<CFD> getPortfolioTrader(int id_trader) {
+		return this.traderCFDManager.getPortfolioTrader(id_trader);
+	}
+
+	public List<CFD> getHistoricoTrader(int id_trader){
+		return this.traderCFDManager.getHistoricoTrader(id_trader);
 	}
 
     public CFDManager(LiveStock ls){
 		this.creatorCFD = new CreatorCFD();
-		this.openCFDs = new HashMap<>();
+		this.openCFDs = new HashMap<>(); // FIXME: 23/11/2019 tem que ir buscar os CFDs abertos À DB!
 		this.liveStock = ls;
 		this.traderCFDManager = new TraderCFDManager();
+
+		// FIXME: 23/11/2019 FAZER INITCFDMANAGER porque o traderCFDManager também precisa de ser carregado
 	}
 }
