@@ -61,9 +61,15 @@ public class CFDManager implements Observer {
 		cfdDAO.put(cfd.getID(), cfd);
 	}
 
+	public List<CFD> getPortfolio(String email)
+	{
+		return this.traderCFDManager.getPortfolio(email);
+	}
+
     public CFDManager(LiveStock ls){
 		this.creator = new Creator();
 		this.openCFDs = new HashMap<>();
 		this.liveStock = ls;
+		this.traderCFDManager = new TraderCFDManager();
 	}
 }
