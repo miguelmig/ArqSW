@@ -61,11 +61,10 @@ public class TraderDAO implements DAO<Integer, Trader> {
                     boolean closed = cfds_rs.getBoolean("closed");
                     String id_ativo = cfds_rs.getString("ativo_id");
                     Ativo ativo = this.getAtivo(id_ativo);
-                    boolean is_long = cfds_rs.getBoolean("is_long");
+                    String tipo = cfds_rs.getString("tipo");
 
-                    CFD cfd;
-                    if(is_long) cfd = new Long(id_trader , stop_loss, take_profit, unidades, total, ativo, trader);
-                    else  cfd = new Short(id_trader , stop_loss, take_profit, unidades, total, ativo, trader);
+                    CreatorCFD creatorCFD = new CreatorCFD();
+                    CFD cfd = creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit);
 
                     cfds.add(cfd);
                 }

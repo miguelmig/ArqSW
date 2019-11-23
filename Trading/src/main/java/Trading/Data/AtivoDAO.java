@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AtivoDAO implements DAO<String, Ativo> {
+
+    CreatorAtivo creatorAtivo = new CreatorAtivo();
+
     @Override
     public void put(String id, Ativo o) {
         try {
@@ -46,11 +49,9 @@ public class AtivoDAO implements DAO<String, Ativo> {
             ResultSet rs = sql.returnQuery(s);
             if (rs.next()) {
                 String nome = rs.getString("nome");
-                boolean comodity = rs.getBoolean("comodity");
-                if(comodity)
-                    return new Comodity(id, nome, 0, 0);
-                else
-                    return new Acao(id, nome, 0, 0);
+                String tipo = rs.getString("tipo");
+
+                return creatorAtivo.factoryMethod(id, nome, 0, 0, tipo);
             }
             else {
                 return null;
@@ -74,11 +75,9 @@ public class AtivoDAO implements DAO<String, Ativo> {
             while (rs.next()){
                 String id = rs.getString("id_ativo");
                 String nome = rs.getString("nome");
-                boolean comodity = rs.getBoolean("comodity");
-                if(comodity)
-                    ativos.add(new Comodity(id, nome, 0, 0));
-                else
-                    ativos.add(new Acao(id, nome, 0, 0));
+                String tipo = rs.getString("tipo");
+
+                ativos.add(creatorAtivo.factoryMethod(id, nome, 0, 0, tipo));
             }
 
             return ativos;

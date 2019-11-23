@@ -10,12 +10,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class CFDDAO implements DAO<Integer, CFD> {
+
+    CreatorCFD creatorCFD = new CreatorCFD();
+
     @Override
     public void put(Integer id_cfd, CFD cfd) {
         try {
             DBConnection sql = ConnectionManager.getConnection();
 
-            PreparedStatement s = sql.prepareStatement("INSERT INTO cfd (id_cfd, stop_loss, take_profit, unidades, total, closed, ativo_id, trader_id, is_long) " +
+            PreparedStatement s = sql.prepareStatement("INSERT INTO cfd (id_cfd, stop_loss, take_profit, unidades, total, closed, ativo_id, trader_id, tipo) " +
                                                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                                                             "ON DUPLICATE KEY UPDATE closed = ?");
             s.setInt(1, id_cfd);
@@ -26,8 +29,8 @@ public class CFDDAO implements DAO<Integer, CFD> {
             s.setBoolean(6, !cfd.isAberto());
             s.setString(7, cfd.getAtivo().getID());
             s.setInt(8, cfd.getTrader().getID());
-            if(cfd instanceof Long) s.setInt(9, 1);
-            else if (cfd instanceof Short) s.setInt(9, 0);
+            if(cfd instanceof Long) s.setString(9, "long");
+            else if (cfd instanceof Short) s.setString(9, "short");
 
             s.setBoolean(10, !cfd.isAberto());
 
@@ -58,10 +61,9 @@ public class CFDDAO implements DAO<Integer, CFD> {
                 Ativo ativo = this.getAtivo(id_ativo);
                 int id_trader = rs.getInt("trader_id");
                 Trader trader = this.getTrader(id_trader);
-                boolean is_long = rs.getBoolean("is_long");
+                String tipo = rs.getString("tipo");
 
-                if(is_long) return new Long(id , stop_loss, take_profit, unidades, total, ativo, trader);
-                else return new Short(id , stop_loss, take_profit, unidades, total, ativo, trader);
+                return creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit);
             }
         }
         catch(SQLException e) {

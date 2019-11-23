@@ -5,6 +5,7 @@ import Trading.Business.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Scanner;
 
 public class UI {
@@ -12,6 +13,7 @@ public class UI {
     private static Facade facade;
     private static int id_trader;
     private static Scanner sc = new Scanner(System.in);
+
 
     private int readOp(){
         System.out.println("Operação a realizar: ");
@@ -69,8 +71,6 @@ public class UI {
             }
         } while(success == -1 && sair != 0);
 
-
-        System.out.println(".------------------------------------------------------------");
         return success;
     }
 
@@ -111,7 +111,7 @@ public class UI {
             showOps(menu);
             opcao = readOp();
             switch(opcao){
-                case 0: id_trader = -1; execStartMenu(); break;
+                case 0: id_trader = -1;  break;
                 case 1: opcao = 0; execMercado(); break;
                 case 2: opcao = 0; execPortfolio(); break;
                 case 3: opcao = 0; execHistorico(); break;
@@ -121,12 +121,64 @@ public class UI {
                 default: System.out.println("Insira uma opção correta");
             }
         } while(opcao != 0);
+
+        execStartMenu();
     }
 
 
     private void execMercado() {
-        System.out.println(facade.getMercado());
+        List<Ativo> ativos = facade.getMercado();
+
+        int i = 1, opcao;
+        for(Ativo a : ativos) {
+            System.out.print(i + ": " + a.toString());
+            i++;
+        }
+
+        System.out.println("X: Abrir CFD relativo ao Ativo X");
+        System.out.println("0: Retroceder");
+
+        do {
+            opcao = readOp();
+            if (isBetween(opcao, 1, ativos.size())){
+                execAbrirCFD(ativos.get(opcao-1));
+                opcao = 0;
+            }
+            else System.out.println("Insira uma opção correta");
+
+        } while(opcao != 0);
+
         execTraderMenu();
+    }
+
+
+
+    private boolean isBetween(int opcao, int min, int max) {
+        if (min <= opcao && opcao <= max) return true;
+        else return false;
+    }
+
+    private void execAbrirCFD(Ativo ativo) {
+        System.out.println("A abrir CFD para " + ativo.getNome());
+
+        System.out.println("Tipo: \n1 - Short \n2 - Long");
+        int _tipo = Integer.parseInt(sc.nextLine());
+        String tipo = "";
+        if(_tipo == 1) tipo = "short";
+        else if(_tipo == 2) tipo = "long";
+
+        System.out.println("Unidades (> 0):");
+        float unidades = Integer.parseInt(sc.nextLine());
+
+        System.out.println("Stop loss (0 para ignorar):");
+        float stop_loss = Integer.parseInt(sc.nextLine());
+
+        System.out.println("Take profit (0 para ignorar):");
+        float take_profit = Integer.parseInt(sc.nextLine());
+
+        // FIXME: 23/11/2019 verificar se tem dinheiro, retorna 1 se for válido, 0 se não tiver dinheiro
+        facade.abrirCFD(id_trader, ativo.getID(), tipo, unidades, stop_loss, take_profit);
+
     }
 
     private void execPortfolio() {
@@ -138,7 +190,11 @@ public class UI {
     }
 
     private void execSaldo() {
+        float saldo = facade.getSaldo(id_trader);
 
+        System.out.println("O seu saldo é: " + saldo + "€");
+
+        execTraderMenu();
     }
 
     private void execAdicionarFundos() {
@@ -165,12 +221,5 @@ public class UI {
         UI ui = new UI();
 
 		ui.execStartMenu();
-
-		//facade.registaTrader("teste", "teste", "teste");
-		//facade.printPrecos();
-		//facade.abrirCFD(1, "AAPL", "long", 1, 100, 200);
-		//facade.fecharCFD(1);
-		//facade.adicionaFundos(1, 100);
-		//facade.levantaFundos(1, 200);
 	}
 }

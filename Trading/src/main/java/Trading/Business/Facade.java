@@ -1,5 +1,6 @@
 package Trading.Business;
 
+import Trading.Data.DAO;
 import Trading.Data.TraderDAO;
 
 import java.util.List;
@@ -15,14 +16,10 @@ public class Facade {
         for(Ativo a : liveStock.ativos.values()) System.out.println(a.toString());
     }
 
-    /********************** Live Stock **********************/
-    public String getMercado() {
-        StringBuilder sb = new StringBuilder();
-        List<Ativo> ativos = this.liveStock.getAtivos();
-        for(Ativo a : ativos)
-            sb.append(a.toString());
+    /********************** Live Stock ***********************/
+    public List<Ativo> getMercado() {
 
-        return sb.toString();
+        return this.liveStock.getAtivos();
     }
 
 
@@ -32,8 +29,6 @@ public class Facade {
         TraderDAO traderDAO = new TraderDAO();
 
         Trader trader = traderDAO.get(id_trader);
-
-        System.out.println(this.liveStock.ativos.size());
 
         Ativo ativo = liveStock.ativos.get(id_ativo);
 
@@ -80,4 +75,10 @@ public class Facade {
     }
 
 
+    public float getSaldo(int id_trader) {
+        DAO<Integer, Trader> traderDAO = new TraderDAO();
+        Trader trader = traderDAO.get(id_trader);
+
+        return trader.getSaldo();
+    }
 }

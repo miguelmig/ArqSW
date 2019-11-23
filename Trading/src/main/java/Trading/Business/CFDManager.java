@@ -10,7 +10,7 @@ public class CFDManager implements Observer {
 
 	Map<String, List<CFD>> openCFDs;
 	LiveStock liveStock;
-	Creator creator;
+	CreatorCFD creatorCFD;
 
 	/**
 	 * 
@@ -23,12 +23,8 @@ public class CFDManager implements Observer {
 		Trader t = cfd.getTrader();
 		float total = cfd.getTotal();
 
-		System.out.println("*** Antes de vender ***\nSaldo: " + t.getSaldo() + "\nCFD: " + cfd.isAberto());
-
 		t.addSaldo(total);
 		cfd.fecha();
-
-		System.out.println("*** Depois de vender ***\nSaldo: " + t.getSaldo() + "\nCFD: " + cfd.isAberto());
 
 		DAO traderDAO = new TraderDAO();
 		traderDAO.put(t.getID(), t);
@@ -38,9 +34,8 @@ public class CFDManager implements Observer {
 
 
 	public void abrirCFD(Trader trader, Ativo ativo, float unidades, String tipo, float stop_loss, float take_profit) {
-		CFD cfd = this.creator.factoryMethod(trader, ativo, unidades, tipo, stop_loss, take_profit);
+		CFD cfd = this.creatorCFD.factoryMethod(trader, ativo, unidades, tipo, true, stop_loss, take_profit);
 		addCFDtoMap(cfd);
-		System.out.println(cfd.toString());
 	}
 
     @Override
@@ -62,7 +57,7 @@ public class CFDManager implements Observer {
 	}
 
     public CFDManager(LiveStock ls){
-		this.creator = new Creator();
+		this.creatorCFD = new CreatorCFD();
 		this.openCFDs = new HashMap<>();
 		this.liveStock = ls;
 	}

@@ -65,14 +65,14 @@ public class LiveStock implements Subject {
 	public LiveStock(){
 		this.ativos = new HashMap<>();
 		this.liveAPI = new AlphaVantageAPI();
-
+		initMercado();
 		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 		exec.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				initMercado();
 			}
-		}, 0, 65, TimeUnit.SECONDS);
+		}, 75, 75, TimeUnit.SECONDS);
 	}
 
 

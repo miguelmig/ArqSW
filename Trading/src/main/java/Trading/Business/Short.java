@@ -92,14 +92,14 @@ public class Short implements CFD {
         return this.aberto;
     }
 
-    public Short(int id, float stop_loss, float take_profit, float unidades, float total, Ativo ativo, Trader trader) {
+    public Short(int id, float stop_loss, float take_profit, float unidades, float total, boolean aberto, Ativo ativo, Trader trader) {
         this.id = id;
         this.stop_loss = stop_loss;
         this.take_profit = take_profit;
         this.unidades = unidades;
         this.total = total;
         this.ativo = ativo;
-        this.aberto = true;
+        this.aberto = aberto;
         this.trader = trader;
     }
 

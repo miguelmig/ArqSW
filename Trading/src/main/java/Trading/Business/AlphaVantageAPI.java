@@ -25,7 +25,7 @@ public class AlphaVantageAPI implements LiveAPI {
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-
+            //System.out.println("GET - " + id);
             conn.connect();
             int responsecode = conn.getResponseCode();
 
@@ -39,7 +39,7 @@ public class AlphaVantageAPI implements LiveAPI {
                 sc.close();
 
                 JSONParser parse = new JSONParser();
-
+               // System.out.println("TO PARSE - " + id);
                 return (JSONObject) parse.parse(inline);
             }
         }
