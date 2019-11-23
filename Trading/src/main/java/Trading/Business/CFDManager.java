@@ -11,6 +11,7 @@ public class CFDManager implements Observer {
 	Map<String, List<CFD>> openCFDs;
 	LiveStock liveStock;
 	CreatorCFD creatorCFD;
+	TraderCFDManager traderCFDManager;
 
 	/**
 	 * 
@@ -34,7 +35,7 @@ public class CFDManager implements Observer {
 
 
 	public void abrirCFD(Trader trader, Ativo ativo, float unidades, String tipo, float stop_loss, float take_profit) {
-		CFD cfd = this.creatorCFD.factoryMethod(trader, ativo, unidades, tipo, true, stop_loss, take_profit);
+		CFD cfd = this.creatorCFD.factoryMethod(trader, ativo, unidades, tipo, true, stop_loss, take_profit, null);
 		addCFDtoMap(cfd);
 	}
 

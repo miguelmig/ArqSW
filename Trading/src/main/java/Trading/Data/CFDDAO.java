@@ -7,6 +7,7 @@ import Trading.Business.Short;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public class CFDDAO implements DAO<Integer, CFD> {
@@ -63,7 +64,14 @@ public class CFDDAO implements DAO<Integer, CFD> {
                 Trader trader = this.getTrader(id_trader);
                 String tipo = rs.getString("tipo");
 
-                return creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit);
+                Date fecho = null;
+                if(closed)
+                {
+                    fecho = new Date(rs.getTimestamp("data_fecho").getTime());
+                }
+
+                return creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit, fecho);
+
             }
         }
         catch(SQLException e) {

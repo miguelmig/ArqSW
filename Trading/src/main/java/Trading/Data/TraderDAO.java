@@ -6,6 +6,7 @@ import Trading.Business.Short;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TraderDAO implements DAO<Integer, Trader> {
@@ -62,9 +63,14 @@ public class TraderDAO implements DAO<Integer, Trader> {
                     String id_ativo = cfds_rs.getString("ativo_id");
                     Ativo ativo = this.getAtivo(id_ativo);
                     String tipo = cfds_rs.getString("tipo");
+                    Date fecho = null;
+                    if(closed)
+                    {
+                        fecho = new Date(rs.getTimestamp("data_fecho").getTime());
+                    }
 
                     CreatorCFD creatorCFD = new CreatorCFD();
-                    CFD cfd = creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit);
+                    CFD cfd = creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit, fecho);
 
                     cfds.add(cfd);
                 }

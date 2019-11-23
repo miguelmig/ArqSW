@@ -26,7 +26,7 @@ public class Facade {
     /********************** CFD MANAGER **********************/
 
     public void abrirCFD(int id_trader, String id_ativo, String tipo, float unidades, float stop_loss, float take_profit){
-        DAO<> traderDAO = new TraderDAO();
+        DAO<Integer, Trader> traderDAO = new TraderDAO();
 
         Trader trader = traderDAO.get(id_trader);
 

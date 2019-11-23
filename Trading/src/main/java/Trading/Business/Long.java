@@ -1,6 +1,8 @@
 package Trading.Business;
 
 
+import java.util.Date;
+
 public class Long implements CFD {
 
     private int id;
@@ -10,6 +12,7 @@ public class Long implements CFD {
     private float total;
     private Ativo ativo;
     private boolean aberto;
+    private Date data_fecho;
     private Trader trader;
 
 
@@ -85,6 +88,7 @@ public class Long implements CFD {
     @Override
     public void fecha() {
         this.aberto = false;
+        setDataFecho(new Date());
     }
 
     @Override
@@ -92,7 +96,15 @@ public class Long implements CFD {
         return this.aberto;
     }
 
-    public Long(int id, float stop_loss, float take_profit, float unidades, float total, boolean aberto, Ativo ativo, Trader trader) {
+
+    @Override
+    public Date getDataFecho() { return this.data_fecho; }
+
+    @Override
+    public void setDataFecho(Date data) { this.data_fecho = data; }
+
+
+    public Long(int id, float stop_loss, float take_profit, float unidades, float total, boolean aberto, Ativo ativo, Trader trader, Date data_fecho) {
         this.id = id;
         this.stop_loss = stop_loss;
         this.take_profit = take_profit;
@@ -101,6 +113,7 @@ public class Long implements CFD {
         this.ativo = ativo;
         this.aberto = aberto;
         this.trader = trader;
+        setDataFecho(data_fecho);
     }
 
     @Override

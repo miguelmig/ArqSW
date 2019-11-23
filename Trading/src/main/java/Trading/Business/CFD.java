@@ -1,5 +1,7 @@
 package Trading.Business;
 
+import java.util.Date;
+
 public interface CFD {
 
 	Trader getTrader();
@@ -51,5 +53,8 @@ public interface CFD {
     void fecha();
 
 	boolean isAberto();
+
+	Date getDataFecho();
+	void setDataFecho(Date data);
 
 }
