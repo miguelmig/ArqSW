@@ -1,8 +1,6 @@
 package Trading.Data;
 
 import Trading.Business.*;
-import Trading.Business.Long;
-import Trading.Business.Short;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -55,6 +53,7 @@ public class TraderDAO implements DAO<Integer, Trader> {
                 ResultSet cfds_rs = con.returnQuery(ps2);
                 List<CFD> cfds = new ArrayList<>();
                 while(cfds_rs.next()) {
+                    int id_cfd = cfds_rs.getInt("id_cfd");
                     float stop_loss = cfds_rs.getFloat("stop_loss");
                     float take_profit = cfds_rs.getFloat("take_profit");
                     float unidades = cfds_rs.getFloat("unidades");
@@ -66,11 +65,11 @@ public class TraderDAO implements DAO<Integer, Trader> {
                     Date fecho = null;
                     if(closed)
                     {
-                        fecho = new Date(rs.getTimestamp("data_fecho").getTime());
+                        fecho = cfds_rs.getDate("data_fecho");
                     }
 
                     CreatorCFD creatorCFD = new CreatorCFD();
-                    CFD cfd = creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit, fecho);
+                    CFD cfd = creatorCFD.loadMethod(id_cfd, trader, ativo, unidades, total, tipo, !closed, stop_loss, take_profit, fecho);
 
                     cfds.add(cfd);
                 }

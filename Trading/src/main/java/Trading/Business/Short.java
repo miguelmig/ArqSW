@@ -1,6 +1,7 @@
 package Trading.Business;
 
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class Short implements CFD {
@@ -115,6 +116,19 @@ public class Short implements CFD {
 
     @Override
     public String toString() {
-        return "CFD (" + this.getClass().toString() + ")";
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+
+        return this.id + " \t| " + df.format(this.total) + " \t\t| " + df.format(this.total/this.unidades) + " \t\t| " + this.stop_loss + " \t\t\t| " + this.take_profit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this==o) return true;
+        if ( o==null || this.getClass() != o.getClass()) return false;
+
+        Short s = (Short)o;
+
+        return this.id == s.getID();
     }
 }

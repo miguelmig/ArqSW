@@ -1,5 +1,8 @@
 package Trading.Business;
 
+import Trading.Data.DAO;
+import Trading.Data.TraderDAO;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +37,22 @@ class TraderCFDManager {
     }
 
     public List<CFD> getHistoricoTrader(int id_trader) {
-        return null;
+        DAO<Integer, Trader> traderDAO = new TraderDAO();
+
+        List<CFD> cfds = traderDAO.get(id_trader).getCurrentCFDs();
+        List<CFD> closed_cfds = new ArrayList<>();
+
+        for (CFD cfd : cfds) {
+            if(!cfd.isAberto()) closed_cfds.add(cfd);
+        }
+
+        return  closed_cfds;
+    }
+
+    public void removeCFD(CFD cfd) {
+        List<CFD> cfds_trader = this.cfds_by_trader.get(cfd.getTrader().getID());
+        cfds_trader.remove(cfd);
+
+        this.cfds_by_trader.put(cfd.getTrader().getID(), cfds_trader);
     }
 }

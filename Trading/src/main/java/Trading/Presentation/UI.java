@@ -6,7 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class UI {
 
@@ -164,17 +166,24 @@ public class UI {
         System.out.println("Tipo: \n1 - Short \n2 - Long");
         int _tipo = Integer.parseInt(sc.nextLine());
         String tipo = "";
-        if(_tipo == 1) tipo = "short";
-        else if(_tipo == 2) tipo = "long";
+        float preco = 0;
+        if(_tipo == 1) {
+            preco = ativo.getPrecoVenda();
+            tipo = "short";
+        }
+        else if(_tipo == 2){
+            preco = ativo.getPrecoCompra();
+            tipo = "long";
+        }
 
         System.out.println("Unidades (> 0):");
         float unidades = Integer.parseInt(sc.nextLine());
 
-        System.out.println("Stop loss (0 para ignorar):");
-        float stop_loss = Integer.parseInt(sc.nextLine());
+        System.out.println("Stop loss (Max: + "+ preco*unidades + "€, 0 para ignorar):");
+        float stop_loss = Float.parseFloat(sc.nextLine());
 
-        System.out.println("Take profit (0 para ignorar):");
-        float take_profit = Integer.parseInt(sc.nextLine());
+        System.out.println("Take profit (Min: + "+ preco*unidades +"€, 0 para ignorar):");
+        float take_profit = Float.parseFloat(sc.nextLine());
 
         // FIXME: 23/11/2019 verificar se tem dinheiro, retorna 1 se for válido, 0 se não tiver dinheiro
         facade.abrirCFD(id_trader, ativo.getID(), tipo, unidades, stop_loss, take_profit);
@@ -182,20 +191,43 @@ public class UI {
     }
 
     private void execPortfolio() {
-        List<CFD> portfolio = facade.getPortfolioTrader(id_trader);
+        Map<Integer, CFD> portfolio = facade.getPortfolioTrader(id_trader).stream().collect(Collectors.toMap(CFD :: getID, cfd -> cfd));
+        Map<String, Ativo> mercado = facade.getMercado().stream().collect(Collectors.toMap(Ativo :: getID, ativo -> ativo));
 
-        for(CFD cfd : portfolio){
-            System.out.print(cfd.toString());
+        System.out.println("ID \t| Total (€) \t| €/Unidade \t| Stop Loss \t| Take Profit \t| Live Venda \t| Live Compra");
+        for(CFD cfd : portfolio.values()){
+            Ativo ativo_cfd = mercado.get(cfd.getAtivo().getID());
+            System.out.println(cfd.toString() + " \t\t\t| " + ativo_cfd.getPrecoVenda() + " \t\t| " + ativo_cfd.getPrecoCompra());
         }
+
+        System.out.println("X: Fechar CFD relativo ao Ativo X");
+        System.out.println("0: Retroceder");
+
+        int opcao;
+        do {
+            opcao = readOp();
+            if (portfolio.get(opcao) != null){
+                facade.fecharCFD(opcao);
+                System.out.println("Fechado com sucesso");
+                opcao = 0;
+            }
+            else System.out.println("Insira uma opção correta");
+
+        } while(opcao != 0);
+
+
+        execTraderMenu();
 
     }
 
     private void execHistorico() {
-        List<CFD> historico = facade.getPortfolioTrader(id_trader);
+        List<CFD> historico = facade.getHistoricoTrader(id_trader);
 
         for(CFD cfd : historico){
-            System.out.print(cfd.toString());
+            System.out.println(cfd.toString());
         }
+
+        execTraderMenu();
     }
 
     private void execSaldo() {

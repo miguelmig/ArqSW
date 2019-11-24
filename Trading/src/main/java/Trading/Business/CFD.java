@@ -57,4 +57,5 @@ public interface CFD {
 	Date getDataFecho();
 	void setDataFecho(Date data);
 
+	boolean equals(Object o);
 }

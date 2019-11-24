@@ -20,6 +20,9 @@ public class CFDManager implements Observer {
 	public void fecharCFD(int id_cfd) {
 		CFDDAO cfdDAO = new CFDDAO();
 		CFD cfd = cfdDAO.get(id_cfd);
+		cfd.setDataFecho(new Date());
+
+		removeCFDFromMap(cfd);
 
 		Trader t = cfd.getTrader();
 		float total = cfd.getTotal();
@@ -33,9 +36,19 @@ public class CFDManager implements Observer {
 		cfdDAO.put(cfd.getID(), cfd);
 	}
 
+	private void removeCFDFromMap(CFD cfd) {
+		List<CFD> open_by_type = this.openCFDs.get(cfd.getAtivo().getID());
+		open_by_type.remove(cfd);
+		this.openCFDs.put(cfd.getAtivo().getID(), open_by_type);
+
+		this.traderCFDManager.removeCFD(cfd);
+
+	}
+
 
 	public void abrirCFD(Trader trader, Ativo ativo, float unidades, String tipo, float stop_loss, float take_profit) {
-		CFD cfd = this.creatorCFD.factoryMethod(trader, ativo, unidades, tipo, true, stop_loss, take_profit, null);
+		int id = new CFDDAO().size() + 1;
+		CFD cfd = this.creatorCFD.factoryMethod(id, trader, ativo, unidades, tipo, true, stop_loss, take_profit, null);
 		addCFDtoMap(cfd);
 	}
 
@@ -52,6 +65,8 @@ public class CFDManager implements Observer {
     private void addCFDtoMap(CFD cfd){
 		List<CFD> l = this.openCFDs.getOrDefault(cfd.getAtivo().getID(), new ArrayList<>());
 		l.add(cfd);
+		this.openCFDs.put(cfd.getAtivo().getID(), l);
+
 		this.traderCFDManager.addCFD(cfd);
 
 		CFDDAO cfdDAO = new CFDDAO();
@@ -74,5 +89,16 @@ public class CFDManager implements Observer {
 		this.traderCFDManager = new TraderCFDManager();
 
 		// FIXME: 23/11/2019 FAZER INITCFDMANAGER porque o traderCFDManager também precisa de ser carregado
+		initCFDManager();
+	}
+
+	private void initCFDManager() {
+		DAO<Integer, CFD> cfdDAO = new CFDDAO();
+
+		List<CFD> cfds = cfdDAO.list();
+
+		for(CFD cfd : cfds){
+			if(cfd.isAberto()) addCFDtoMap(cfd);
+		}
 	}
 }

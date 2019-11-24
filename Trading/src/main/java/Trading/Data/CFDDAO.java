@@ -7,6 +7,7 @@ import Trading.Business.Short;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,12 +66,11 @@ public class CFDDAO implements DAO<Integer, CFD> {
                 String tipo = rs.getString("tipo");
 
                 Date fecho = null;
-                if(closed)
-                {
-                    fecho = new Date(rs.getTimestamp("data_fecho").getTime());
+                if(closed) {
+                    fecho = rs.getDate("data_fecho"); //new Date(rs.getTimestamp("data_fecho").getTime());
                 }
 
-                return creatorCFD.factoryMethod(trader, ativo, unidades, tipo, !closed, stop_loss, take_profit, fecho);
+                return creatorCFD.loadMethod(id, trader, ativo, unidades, total, tipo, !closed, stop_loss, take_profit, fecho);
 
             }
         }
@@ -85,7 +85,24 @@ public class CFDDAO implements DAO<Integer, CFD> {
 
     @Override
     public List<CFD> list() {
-        return null;
+        List<CFD> cfds = new ArrayList<>();
+
+        try{
+            DBConnection sql = ConnectionManager.getConnection();
+
+            PreparedStatement s = sql.prepareStatement("SELECT * FROM cfd");
+
+            ResultSet rs = sql.returnQuery(s);
+            while (rs.next()){
+                int id = rs.getInt("id_cfd");
+                cfds.add(get(id));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cfds;
     }
 
     @Override

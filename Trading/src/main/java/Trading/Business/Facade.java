@@ -39,7 +39,7 @@ public class Facade {
         this.CFDManager.fecharCFD(id_cfd);
     }
 
-    public List<CFD> historicoTrader(int id_trader){
+    public List<CFD> getHistoricoTrader(int id_trader) {
         return this.CFDManager.getHistoricoTrader(id_trader);
     }
 
