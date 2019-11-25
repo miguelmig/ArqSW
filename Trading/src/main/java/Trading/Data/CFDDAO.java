@@ -107,7 +107,18 @@ public class CFDDAO implements DAO<Integer, CFD> {
 
     @Override
     public void remove(Integer integer) {
+        try
+        {
+            DBConnection sql = ConnectionManager.getConnection();
 
+            PreparedStatement s = sql.prepareStatement("DELETE FROM cfd WHERE id_cfd = ?");
+            s.setInt(1, integer);
+
+            sql.query(s);
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -129,7 +140,6 @@ public class CFDDAO implements DAO<Integer, CFD> {
             return 0;
         }
     }
-
 
     private Trader getTrader(int id){
         TraderDAO traderDAO = new TraderDAO();

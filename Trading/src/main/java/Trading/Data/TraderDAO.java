@@ -11,7 +11,7 @@ public class TraderDAO implements DAO<Integer, Trader> {
     @Override
     public void put(Integer id, Trader trader) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/trading","root","123456");
+            DBConnection con = ConnectionManager.getConnection();
 
             PreparedStatement s = con.prepareStatement("INSERT INTO trader (id_trader, email, password, data_nasc, saldo) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE saldo = ?");
             s.setInt(1, id);
@@ -22,9 +22,8 @@ public class TraderDAO implements DAO<Integer, Trader> {
 
             s.setFloat(6, trader.getSaldo());
 
-            s.execute();
+           con.query(s);
 
-            con.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,6 +94,26 @@ public class TraderDAO implements DAO<Integer, Trader> {
 
     @Override
     public void remove(Integer id) {
+        try
+        {
+            DBConnection con = ConnectionManager.getConnection();
+
+            CFDDAO cfd_dao = new CFDDAO();
+            PreparedStatement ps = con.prepareStatement("SELECT id_cfd FROM cfd WHERE trader_id = ?");
+            ps.setInt(1, id);
+            ResultSet cfds_rs = con.returnQuery(ps);
+            while(cfds_rs.next()) {
+                int id_cfd = cfds_rs.getInt("id_cfd");
+                cfd_dao.remove(id_cfd);
+            }
+
+            PreparedStatement ps2 = con.prepareStatement("DELETE FROM trader WHERE id_trader = ? ");
+            ps2.setInt(1, id);
+            con.query(ps2);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

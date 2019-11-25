@@ -18,13 +18,15 @@ public class AtivoDAO implements DAO<String, Ativo> {
         try {
             DBConnection sql = ConnectionManager.getConnection();
 
-            PreparedStatement s = sql.prepareStatement("INSERT INTO ativo (id_ativo, nome, comodity) VALUES (?, ?, ?)");
+            PreparedStatement s = sql.prepareStatement("INSERT INTO ativo (id_ativo, nome, tipo) VALUES (?, ?, ?)");
             s.setString(1, id);
             s.setString(2, o.getNome());
             if (o instanceof Comodity) {
-                s.setInt(3, 1);
+                s.setString(3, "COMODITY");
             } else if (o instanceof Acao) {
-                s.setInt(3, 0);
+                s.setString(3, "ACAO");
+            } else if(o instanceof Crypto) {
+                s.setString(3, "CRYPTO");
             } else {
                 // Ativo não implementado ainda
                 System.err.println("Este tipo de ativo não está implementado ainda");
