@@ -1,5 +1,7 @@
 package Trading.Business;
 
+import java.text.DecimalFormat;
+
 public class Acao implements Ativo {
 
     private String id;
@@ -49,7 +51,10 @@ public class Acao implements Ativo {
 
     @Override
     public String toString() {
-        return this.id + "   |   Preco compra: " + this.preco_compra + "   |   Preco venda: " + this.preco_venda + "   |   " + this.nome + "\n";
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+
+        return this.id + "   |   Preco compra: " + df.format(this.preco_compra) + "   |   Preco venda: " + df.format(this.preco_venda) + "   |   " + this.nome + "   |   Ação \n";
     }
 
     public Acao(String id, String nome, float preco_compra, float preco_venda){

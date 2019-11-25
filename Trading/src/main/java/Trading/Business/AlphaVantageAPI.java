@@ -3,8 +3,10 @@ package Trading.Business;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Scanner;
 
@@ -23,25 +25,17 @@ public class AlphaVantageAPI implements LiveAPI {
             URL url = new URL("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + id + "&interval=1min&apikey=NUY2ZKFZVGL817XJ");
             String inline = "";
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            //System.out.println("GET - " + id);
-            conn.connect();
-            int responsecode = conn.getResponseCode();
+            URLConnection conn = url.openConnection();
 
-            if (responsecode != 200)
-                throw new RuntimeException("HttpResponseCode: " + responsecode);
-            else {
-                Scanner sc = new Scanner(url.openStream());
-                while (sc.hasNext()) {
-                    inline += sc.nextLine();
-                }
-                sc.close();
-
-                JSONParser parse = new JSONParser();
-               // System.out.println("TO PARSE - " + id);
-                return (JSONObject) parse.parse(inline);
+            Scanner sc = new Scanner(url.openStream());
+            while (sc.hasNext()) {
+                inline += sc.nextLine();
             }
+            sc.close();
+
+            JSONParser parse = new JSONParser();
+            return (JSONObject) parse.parse(inline);
+
         }
         catch (Exception e) {
             e.printStackTrace();

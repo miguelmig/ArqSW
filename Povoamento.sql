@@ -5,7 +5,7 @@ SELECT * FROM ativo;
 
 DELETE FROM trader;
 DELETE FROM ativo WHERE id_ativo > '0';
-DELETE FROM cfd;
+DELETE FROM cfd WHERE id_cfd > 0;
 
 INSERT INTO ativo
 VALUES -- ('AAPL', 'Apple', 'acao'),
