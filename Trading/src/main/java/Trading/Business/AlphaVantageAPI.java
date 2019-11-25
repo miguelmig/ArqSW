@@ -34,7 +34,24 @@ public class AlphaVantageAPI implements LiveAPI {
             sc.close();
 
             JSONParser parse = new JSONParser();
-            return (JSONObject) parse.parse(inline);
+            JSONObject json = (JSONObject) parse.parse(inline);
+
+            if(json.get("Error Message") != null) {
+                url = new URL("https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=" + id + "&market=EUR&apikey=NUY2ZKFZVGL817XJ");
+
+                conn = url.openConnection();
+                inline = "";
+                sc = new Scanner(url.openStream());
+                while (sc.hasNext()) {
+                    inline += sc.nextLine();
+                }
+                sc.close();
+
+                parse = new JSONParser();
+                return (JSONObject) parse.parse(inline);
+            }
+
+            return json;
 
         }
         catch (Exception e) {
@@ -50,17 +67,24 @@ public class AlphaVantageAPI implements LiveAPI {
 	 * @param jobj
 	 */
 	private float[] parseData(JSONObject jobj) {
-        jobj = (JSONObject)jobj.get("Time Series (1min)");
-
-        Collection c = jobj.values();
-
-        jobj = (JSONObject) (c.toArray())[0];
-
-        //System.out.println(jobj);
-
         float r[] = new float[2];
-        r[0] = Float.parseFloat(jobj.get("3. low").toString());
-        r[1] = Float.parseFloat(jobj.get("2. high").toString());
+        JSONObject json;
+        if((json = (JSONObject)jobj.get("Time Series (1min)")) != null){
+            Collection c = json.values();
+
+            json = (JSONObject) (c.toArray())[0];
+
+            r[0] = Float.parseFloat(json.get("1. open").toString());
+            r[1] = r[0]*1.01f;
+        }
+        else if ((json = (JSONObject)jobj.get("Time Series (Digital Currency Daily)")) != null){
+            Collection c = json.values();
+
+            json = (JSONObject) (c.toArray())[0];
+
+            r[0] = Float.parseFloat(json.get("1a. open (EUR)").toString());
+            r[1] = r[0]*1.01f;
+        }
 
         return r;
 	}

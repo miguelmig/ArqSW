@@ -16,6 +16,10 @@ public class CreatorAtivo {
 		else if (tipo.equalsIgnoreCase("ACAO")) {
 			return new Acao(id_ativo, nome, preco_compra, preco_venda);
 		}
+		else if (tipo.equalsIgnoreCase("CRYPTO")) {
+			return new Crypto(id_ativo, nome, preco_compra, preco_venda);
+		}
+
 		else return null;
 	}
 
