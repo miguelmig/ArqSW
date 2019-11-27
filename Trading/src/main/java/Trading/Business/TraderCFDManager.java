@@ -37,14 +37,9 @@ class TraderCFDManager {
     }
 
     public List<CFD> getHistoricoTrader(int id_trader) {
-        DAO<Integer, Trader> traderDAO = new TraderDAO();
+        TraderDAO traderDAO = new TraderDAO();
 
-        List<CFD> cfds = traderDAO.get(id_trader).getCurrentCFDs();
-        List<CFD> closed_cfds = new ArrayList<>();
-
-        for (CFD cfd : cfds) {
-            if(!cfd.isAberto()) closed_cfds.add(cfd);
-        }
+        List<CFD> closed_cfds = traderDAO.getClosedCFD(id_trader);
 
         return  closed_cfds;
     }

@@ -5,6 +5,7 @@ import Trading.Business.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -23,7 +24,8 @@ public class UI {
     }
 
 
-    private void showOps(String[] ops){
+    private void showOps(String[] ops)
+    {
         for(String op : ops)
             System.out.println(op);
     }
@@ -32,7 +34,8 @@ public class UI {
         System.out.println("**************** Trading ****************");
     }
 
-    private void execStartMenu(){
+    private void execStartMenu()
+    {
         int opcao;
         String[] menu = Menu.getMainMenu();
         do {
@@ -119,11 +122,44 @@ public class UI {
     private void execMercado() {
         List<Ativo> ativos = facade.getMercado();
 
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+
         int i = 1, opcao;
-        for(Ativo a : ativos) {
-            System.out.print(i + ": " + a.toString());
+        System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
+        System.out.println("| Id  |  Nome | Preço Compra |  Preço Venda |     Nome    |   Tipo   |");
+        System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
+        for(Ativo a : ativos)
+        {
+            System.out.print('|');
+            System.out.print(String.format(" %-4s", Integer.toString(i)));
+            System.out.print("|");
+            System.out.print(String.format(" %-6s", a.getID()));
+            System.out.print("|");
+            System.out.print(String.format(" %-13s", df.format(a.getPrecoCompra())));
+            System.out.print("|");
+            System.out.print(String.format(" %-13s", df.format(a.getPrecoVenda())));
+            System.out.print("|");
+            System.out.print(String.format(" %-12s", a.getNome()));
+            System.out.print("|");
+            if(a instanceof Acao)
+            {
+                System.out.print(String.format(" %-9s", "Ação"));
+            }
+            else if(a instanceof Comodity)
+            {
+                System.out.print(String.format(" %-9s", "Comodity"));
+            }
+            else if(a instanceof Crypto)
+            {
+                System.out.print(String.format(" %-9s", "Crypto"));
+            }
+            System.out.println("|");
+
             i++;
         }
+
+        System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
 
         System.out.println("X: Abrir CFD relativo ao Ativo X");
         System.out.println("0: Retroceder");
@@ -187,11 +223,35 @@ public class UI {
         Map<Integer, CFD> portfolio = facade.getPortfolioTrader(id_trader).stream().collect(Collectors.toMap(CFD :: getID, cfd -> cfd));
         Map<String, Ativo> mercado = facade.getMercado().stream().collect(Collectors.toMap(Ativo :: getID, ativo -> ativo));
 
-        System.out.println("ID \t| Total (€) \t| €/Unidade \t| Stop Loss \t| Take Profit \t| Live Venda \t| Live Compra");
-        for(CFD cfd : portfolio.values()){
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+
+        System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
+        System.out.println("|  Id  | Total (€) | Unidade | Stop Loss | Take Profit | Live Venda | Live Compra |");
+        System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
+        //System.out.println("ID \t| Total (€) \t| €/Unidade \t| Stop Loss \t| Take Profit \t| Live Venda \t| Live Compra");
+        for(CFD cfd : portfolio.values())
+        {
             Ativo ativo_cfd = mercado.get(cfd.getAtivo().getID());
-            System.out.println(cfd.toString() + " \t\t\t| " + ativo_cfd.getPrecoVenda() + " \t\t| " + ativo_cfd.getPrecoCompra());
+            //System.out.println(cfd.toString() + " \t\t\t| " + ativo_cfd.getPrecoVenda() + " \t\t| " + ativo_cfd.getPrecoCompra());
+            System.out.print('|');
+            System.out.print(String.format(" %-5s", Integer.toString(cfd.getID())));
+            System.out.print("|");
+            System.out.print(String.format(" %-10s", df.format(cfd.getTotal())));
+            System.out.print("|");
+            System.out.print(String.format(" %-8s", df.format(cfd.getUnidades())));
+            System.out.print("|");
+            System.out.print(String.format(" %-10s", df.format(cfd.getStopLoss())));
+            System.out.print("|");
+            System.out.print(String.format(" %-12s", df.format(cfd.getTakeProfit())));
+            System.out.print("|");
+            System.out.print(String.format(" %-11s", df.format(ativo_cfd.getPrecoVenda())));
+            System.out.print("|");
+            System.out.print(String.format(" %-12s", df.format(ativo_cfd.getPrecoCompra())));
+            System.out.println("|");
         }
+
+        System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
 
         System.out.println("X: Fechar CFD relativo ao Ativo X");
         System.out.println("0: Retroceder");
@@ -216,10 +276,28 @@ public class UI {
     private void execHistorico() {
         List<CFD> historico = facade.getHistoricoTrader(id_trader);
 
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+
+        System.out.println("+------+-----------+---------+-----------+-------------+");
+        System.out.println("|  Id  | Total (€) | Unidade | Stop Loss | Take Profit |");
+        System.out.println("+------+-----------+---------+-----------+-------------+");
         for(CFD cfd : historico){
-            System.out.println(cfd.toString());
+            System.out.print('|');
+            System.out.print(String.format(" %-5s", Integer.toString(cfd.getID())));
+            System.out.print("|");
+            System.out.print(String.format(" %-10s", df.format(cfd.getTotal())));
+            System.out.print("|");
+            System.out.print(String.format(" %-8s", df.format(cfd.getUnidades())));
+            System.out.print("|");
+            System.out.print(String.format(" %-10s", df.format(cfd.getStopLoss())));
+            System.out.print("|");
+            System.out.print(String.format(" %-12s", df.format(cfd.getTakeProfit())));
+            System.out.println("|");
+            //System.out.println(cfd.toString());
         }
 
+        System.out.println("+------+-----------+---------+-----------+-------------+");
         execTraderMenu();
     }
 

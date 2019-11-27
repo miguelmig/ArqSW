@@ -89,7 +89,58 @@ public class TraderDAO implements DAO<Integer, Trader> {
 
     @Override
     public List<Trader> list() {
-        return null;
+        try {
+            List<Trader> traders = new ArrayList<>();
+            DBConnection con = ConnectionManager.getConnection();
+
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM trader");
+
+            ResultSet rs = con.returnQuery(ps);
+            while(rs.next())
+            {
+                Trader trader = new Trader();
+                trader.setID(rs.getInt("id_trader"));
+                trader.setEmail(rs.getString("email"));
+                trader.setPassword(rs.getString("password"));
+                trader.setDataNasc(rs.getString("data_nasc"));
+                trader.setSaldo(rs.getFloat("saldo"));
+
+                PreparedStatement ps2 = con.prepareStatement("SELECT * FROM cfd WHERE trader_id = ?");
+                ps2.setInt(1, rs.getInt("id_trader"));
+                ResultSet cfds_rs = con.returnQuery(ps2);
+                List<CFD> cfds = new ArrayList<>();
+                while(cfds_rs.next()) {
+                    int id_cfd = cfds_rs.getInt("id_cfd");
+                    float stop_loss = cfds_rs.getFloat("stop_loss");
+                    float take_profit = cfds_rs.getFloat("take_profit");
+                    float unidades = cfds_rs.getFloat("unidades");
+                    float total = cfds_rs.getFloat("total");
+                    boolean closed = cfds_rs.getBoolean("closed");
+                    String id_ativo = cfds_rs.getString("ativo_id");
+                    Ativo ativo = this.getAtivo(id_ativo);
+                    String tipo = cfds_rs.getString("tipo");
+                    Date fecho = null;
+                    if(closed)
+                    {
+                        fecho = cfds_rs.getDate("data_fecho");
+                    }
+
+                    CreatorCFD creatorCFD = new CreatorCFD();
+                    CFD cfd = creatorCFD.loadMethod(id_cfd, trader, ativo, unidades, total, tipo, !closed, stop_loss, take_profit, fecho);
+
+                    cfds.add(cfd);
+                }
+
+                trader.setCurrentCFDs(cfds);
+                traders.add(trader);
+            }
+
+            return traders;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -166,6 +217,44 @@ public class TraderDAO implements DAO<Integer, Trader> {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public List<CFD> getClosedCFD(Integer id)
+    {
+        Trader trader = get(id);
+        try {
+            DBConnection sql = ConnectionManager.getConnection();
+            PreparedStatement ps = sql.prepareStatement("SELECT * FROM cfd WHERE trader_id = ? AND closed = 1 ORDER BY data_fecho DESC;");
+            ps.setInt(1, id);
+            ResultSet cfds_rs = sql.returnQuery(ps);
+            List<CFD> cfds = new ArrayList<>();
+            while (cfds_rs.next()) {
+                int id_cfd = cfds_rs.getInt("id_cfd");
+                float stop_loss = cfds_rs.getFloat("stop_loss");
+                float take_profit = cfds_rs.getFloat("take_profit");
+                float unidades = cfds_rs.getFloat("unidades");
+                float total = cfds_rs.getFloat("total");
+                boolean closed = cfds_rs.getBoolean("closed");
+                String id_ativo = cfds_rs.getString("ativo_id");
+                Ativo ativo = this.getAtivo(id_ativo);
+                String tipo = cfds_rs.getString("tipo");
+                Date fecho = null;
+                if (closed) {
+                    fecho = cfds_rs.getDate("data_fecho");
+                }
+
+                CreatorCFD creatorCFD = new CreatorCFD();
+                CFD cfd = creatorCFD.loadMethod(id_cfd, trader, ativo, unidades, total, tipo, !closed, stop_loss, take_profit, fecho);
+
+                cfds.add(cfd);
+            }
+            return cfds;
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
