@@ -24,7 +24,5 @@ public interface Subject {
 	 */
 	void notifyObservers(String id_ativo);
 
-	Collection<Observer> getObservers();
-
 
 }

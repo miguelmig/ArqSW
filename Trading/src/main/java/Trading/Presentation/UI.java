@@ -68,7 +68,7 @@ public class UI {
             if(success == -1){
                 System.out.println("E-mail ou Password incorretos. Tente novamente.\n\n1 - Tentar novamente\n0 - Cancelar operação");
                 do {
-                    sair = sc.nextInt();
+                    sair = Integer.parseInt(sc.nextLine());
                 } while(sair != 0 && sair != 1);
             }
         } while(success == -1 && sair != 0);
@@ -77,32 +77,20 @@ public class UI {
     }
 
     private void registar() {
-        int sair = 0, success = -1;
         String email, pw, data_nasc;
 
-        do {
-            System.out.println("E-mail: ");
-            email = sc.nextLine();
+        System.out.println("E-mail: ");
+        email = sc.nextLine();
 
-            System.out.println("Password: ");
-            pw = sc.nextLine();
+        System.out.println("Password: ");
+        pw = sc.nextLine();
 
-            System.out.println("Data Nascimento: ");
-            data_nasc = sc.nextLine();
+        System.out.println("Data Nascimento: ");
+        data_nasc = sc.nextLine();
 
-            facade.registaTrader(email, pw, data_nasc);
-
-            /*
-            if(success == -1){
-                System.out.println("E-mail já utilizado. Tente novamente.\n\n1 - Tentar novamente\n0 - Cancelar operação");
-                do {
-                    sair = sc.nextInt();
-                } while(sair != 0 && sair != 1);
-            }
-
-             */
-        } while(success == -1 && sair != 0);
-
+        int check_email = facade.registaTrader(email, pw, data_nasc);
+        if(check_email == 1) System.out.println("Registado com sucesso!");
+        else System.out.println("Erro: Email já está registado.");
     }
 
     private void execTraderMenu() {

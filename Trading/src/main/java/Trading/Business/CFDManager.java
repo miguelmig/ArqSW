@@ -22,16 +22,17 @@ public class CFDManager implements Observer {
 		CFD cfd = cfdDAO.get(id_cfd);
 		cfd.setDataFecho(new Date());
 
+		// Para atualizar os preços do ativo
+		Ativo ativo = liveStock.ativos.get(cfd.getAtivo().getID());
+
+
+		OpenCloseStrategy ocs;
+		if(cfd instanceof Long) ocs = new LongStrategy();
+		else ocs = new ShortStrategy();
+
+		ocs.fecharCFD(cfd, ativo);
+
 		removeCFDFromMap(cfd);
-
-		Trader t = cfd.getTrader();
-		float total = cfd.getTotal();
-
-		t.addSaldo(total);
-		cfd.fecha();
-
-		DAO traderDAO = new TraderDAO();
-		traderDAO.put(t.getID(), t);
 
 		cfdDAO.put(cfd.getID(), cfd);
 	}
@@ -47,29 +48,25 @@ public class CFDManager implements Observer {
 
 
 	public int abrirCFD(int id_trader, String id_ativo, float unidades, String tipo, float stop_loss, float take_profit) {
-		int id = new CFDDAO().size() + 1;
+		int id_cfd = new CFDDAO().size() + 1;
 		DAO<Integer, Trader> traderDAO = new TraderDAO();
-
 		Trader trader = traderDAO.get(id_trader);
 
 		Ativo ativo = liveStock.ativos.get(id_ativo);
 
-		if(checkSaldo(ativo.getPrecoCompra()*unidades, trader)){
-			CFD cfd = this.creatorCFD.factoryMethod(id, trader, ativo, unidades, tipo, true, stop_loss, take_profit, null);
+		CFD cfd = this.creatorCFD.factoryMethod(id_cfd, trader, ativo, unidades, tipo, true, stop_loss, take_profit, null);
+
+		OpenCloseStrategy ocs;
+		if(cfd instanceof Long) ocs = new LongStrategy();
+		else ocs = new ShortStrategy();
+
+		if(ocs.abrirCFD(cfd) == 1) {
 			addCFDtoMap(cfd);
-
-			WalletManager wm = new WalletManager();
-			wm.removerFundos(id_trader, cfd.getTotal());
-
 			return 1;
 		}
 		else return 0;
 	}
 
-	private boolean checkSaldo(float valor_total, Trader trader){
-		if(valor_total > trader.getSaldo()) return false;
-		else return true;
-	}
 
     @Override
     public void update(String id_ativo) {
@@ -107,6 +104,7 @@ public class CFDManager implements Observer {
 		this.liveStock = ls;
 		this.traderCFDManager = new TraderCFDManager();
 
+		ls.addObserver(this);
 		initCFDManager();
 	}
 

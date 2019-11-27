@@ -1,7 +1,6 @@
 package Trading.Business;
 
 import Trading.Data.AtivoDAO;
-import Trading.Data.DAO;
 
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -15,19 +14,24 @@ public class LiveStock implements Subject {
 	LiveAPI liveAPI;
 
 
-	private void initMercado() {
+	private void updateMercado() {
 		AtivoDAO ativoDAO = new AtivoDAO();
 
 		List<Ativo> ativos_list = ativoDAO.list();
 		System.err.println("A ATUALIZAR ATIVOS");
-		for(Ativo a : ativos_list) {
-			float[] precos = this.liveAPI.getPrecosAtivo(a.getID());
+		for(Ativo ativo : ativos_list) {
+			float[] precos = this.liveAPI.getPrecosAtivo(ativo.getID());
+			float preco_venda_temp = ativo.getPrecoVenda();
+			float preco_compra_temp = ativo.getPrecoCompra();
 
-			a.setPrecoVenda(precos[0]);
-			a.setPrecoCompra(precos[1]);
+			ativo.setPrecoVenda(precos[0]);
+			ativo.setPrecoCompra(precos[1]);
 
-			this.ativos.put(a.getID(), a);
-			System.err.print(a.toString());
+			// Notificar apenas quando os preços mudam
+			if(preco_compra_temp != precos[1] || preco_venda_temp != precos[0]) notifyObservers(ativo.getID());
+
+			this.ativos.put(ativo.getID(), ativo);
+			System.err.print(ativo.toString());
 		}
 	}
 
@@ -48,15 +52,11 @@ public class LiveStock implements Subject {
 		this.observers.forEach(o -> o.update(id_ativo));
 	}
 
-	@Override
-	public Collection<Observer> getObservers() {
-		return null;
-	}
 
 
 	// FIXME: 19/11/2019 ESTE PREÇO DEVE TER EM CONTA SE O CFD FOI LONG OU SHORT?
 	public float getPrecoAtivo(String id_ativo) {
-		return this.ativos.get(id_ativo).getPrecoVenda();
+		return this.ativos.get(id_ativo).getPrecoCompra();
 	}
 
 
@@ -65,12 +65,14 @@ public class LiveStock implements Subject {
 	public LiveStock(){
 		this.ativos = new HashMap<>();
 		this.liveAPI = new AlphaVantageAPI();
-		initMercado();
+		this.observers = new ArrayList<>();
+		updateMercado();
+
 		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 		exec.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				initMercado();
+				updateMercado();
 			}
 		}, 75, 75, TimeUnit.SECONDS);
 	}

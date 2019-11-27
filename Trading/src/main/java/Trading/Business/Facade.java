@@ -45,8 +45,8 @@ public class Facade {
 
     /********************** USER MANAGER **********************/
 
-    public void registaTrader(String email, String password, String data_nasc) {
-        this.userManager.registarTrader(email, password, data_nasc);
+    public int registaTrader(String email, String password, String data_nasc) {
+        return this.userManager.registarTrader(email, password, data_nasc);
     }
 
     public int login(String email, String password) {
