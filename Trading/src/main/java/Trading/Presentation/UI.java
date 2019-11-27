@@ -185,9 +185,14 @@ public class UI {
         System.out.println("Take profit (Min: + "+ preco*unidades +"€, 0 para ignorar):");
         float take_profit = Float.parseFloat(sc.nextLine());
 
-        // FIXME: 23/11/2019 verificar se tem dinheiro, retorna 1 se for válido, 0 se não tiver dinheiro
-        facade.abrirCFD(id_trader, ativo.getID(), tipo, unidades, stop_loss, take_profit);
+        int check_saldo = facade.abrirCFD(id_trader, ativo.getID(), tipo, unidades, stop_loss, take_profit);
 
+        if(check_saldo == 1){
+            System.out.println("CFD aberto com sucesso.");
+        }
+        else{
+            System.out.println("Erro: Não possui saldo suficiente para efetuar a operação.");
+        }
     }
 
     private void execPortfolio() {

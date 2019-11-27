@@ -46,10 +46,29 @@ public class CFDManager implements Observer {
 	}
 
 
-	public void abrirCFD(Trader trader, Ativo ativo, float unidades, String tipo, float stop_loss, float take_profit) {
+	public int abrirCFD(int id_trader, String id_ativo, float unidades, String tipo, float stop_loss, float take_profit) {
 		int id = new CFDDAO().size() + 1;
-		CFD cfd = this.creatorCFD.factoryMethod(id, trader, ativo, unidades, tipo, true, stop_loss, take_profit, null);
-		addCFDtoMap(cfd);
+		DAO<Integer, Trader> traderDAO = new TraderDAO();
+
+		Trader trader = traderDAO.get(id_trader);
+
+		Ativo ativo = liveStock.ativos.get(id_ativo);
+
+		if(checkSaldo(ativo.getPrecoCompra()*unidades, trader)){
+			CFD cfd = this.creatorCFD.factoryMethod(id, trader, ativo, unidades, tipo, true, stop_loss, take_profit, null);
+			addCFDtoMap(cfd);
+
+			WalletManager wm = new WalletManager();
+			wm.removerFundos(id_trader, cfd.getTotal());
+
+			return 1;
+		}
+		else return 0;
+	}
+
+	private boolean checkSaldo(float valor_total, Trader trader){
+		if(valor_total > trader.getSaldo()) return false;
+		else return true;
 	}
 
     @Override
@@ -84,11 +103,10 @@ public class CFDManager implements Observer {
 
     public CFDManager(LiveStock ls){
 		this.creatorCFD = new CreatorCFD();
-		this.openCFDs = new HashMap<>(); // FIXME: 23/11/2019 tem que ir buscar os CFDs abertos À DB!
+		this.openCFDs = new HashMap<>();
 		this.liveStock = ls;
 		this.traderCFDManager = new TraderCFDManager();
 
-		// FIXME: 23/11/2019 FAZER INITCFDMANAGER porque o traderCFDManager também precisa de ser carregado
 		initCFDManager();
 	}
 
