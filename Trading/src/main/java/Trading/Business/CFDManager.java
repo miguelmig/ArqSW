@@ -72,8 +72,12 @@ public class CFDManager implements Observer {
     public void update(String id_ativo) {
         float current_price = liveStock.getPrecoAtivo(id_ativo);
 
-        for(CFD cfd : openCFDs.get(id_ativo)){
-            if(cfd.getTakeProfit() <= current_price || cfd.getStopLoss() >= current_price) fecharCFD(cfd.getID());
+        for(CFD cfd : openCFDs.get(id_ativo))
+        {
+            if((cfd.getTakeProfit() != 0 && cfd.getTakeProfit() <= current_price) ||
+					(cfd.getStopLoss() != 0 && cfd.getStopLoss() >= current_price)) {
+            	fecharCFD(cfd.getID());
+			}
         }
 
     }
