@@ -1,13 +1,10 @@
 package Trading.Business;
 
-import Trading.Data.DAO;
-import Trading.Data.TraderDAO;
-
 import java.util.List;
 
 public class Facade {
 
-	UserManager userManager;
+	TraderManager traderManager;
 	WalletManager walletManager;
 	LiveStock liveStock;
 	CFDManager CFDManager;
@@ -46,11 +43,11 @@ public class Facade {
     /********************** USER MANAGER **********************/
 
     public int registaTrader(String email, String password, String data_nasc) {
-        return this.userManager.registarTrader(email, password, data_nasc);
+        return this.traderManager.registarTrader(email, password, data_nasc);
     }
 
     public int login(String email, String password) {
-        return this.userManager.login(email, password);
+        return this.traderManager.login(email, password);
     }
 
 
@@ -75,7 +72,7 @@ public class Facade {
     public Facade(){
         this.liveStock = new LiveStock();
         this.CFDManager = new CFDManager(this.liveStock);
-        this.userManager = new UserManager();
+        this.traderManager = new TraderManager();
         this.walletManager = new WalletManager();
     }
 

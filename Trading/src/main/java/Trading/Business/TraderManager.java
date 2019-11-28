@@ -3,7 +3,7 @@ package Trading.Business;
 import Trading.Data.DAO;
 import Trading.Data.TraderDAO;
 
-public class UserManager {
+public class TraderManager {
 
 	public int registarTrader(String email, String password, String data_nasc) {
 		TraderDAO traderDAO = new TraderDAO();

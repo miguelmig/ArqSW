@@ -55,6 +55,7 @@ public interface CFD {
 	boolean isAberto();
 
 	Date getDataFecho();
+
 	void setDataFecho(Date data);
 
 	boolean equals(Object o);

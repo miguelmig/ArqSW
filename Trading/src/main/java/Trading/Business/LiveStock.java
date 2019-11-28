@@ -53,13 +53,14 @@ public class LiveStock implements Subject {
 	}
 
 
-
 	// FIXME: 19/11/2019 ESTE PREÇO DEVE TER EM CONTA SE O CFD FOI LONG OU SHORT?
 	public float getPrecoAtivo(String id_ativo) {
 		return this.ativos.get(id_ativo).getPrecoCompra();
 	}
 
-
+	public List<Ativo> getAtivos() {
+		return new ArrayList<>(this.ativos.values());
+	}
 
 
 	public LiveStock(){
@@ -77,8 +78,4 @@ public class LiveStock implements Subject {
 		}, 75, 75, TimeUnit.SECONDS);
 	}
 
-
-	public List<Ativo> getAtivos() {
-		return new ArrayList<>(this.ativos.values());
-	}
 }
