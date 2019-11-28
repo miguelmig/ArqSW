@@ -7,8 +7,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collection;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.lang.Long;
 
 public class AlphaVantageAPI implements LiveAPI {
 
@@ -78,9 +80,30 @@ public class AlphaVantageAPI implements LiveAPI {
             r[1] = r[0]*1.01f;
         }
         else if ((json = (JSONObject)jobj.get("Time Series (Digital Currency Daily)")) != null){
-            Collection c = json.values();
+            Set<String> keys = json.keySet();
 
-            json = (JSONObject) (c.toArray())[0];
+            Date now = new Date();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            String closest_date = Collections.min(keys, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    try {
+                        long diff1 = Math.abs(df.parse(o1).getTime() - now.getTime());
+                        long diff2 = Math.abs(df.parse(o2).getTime() - now.getTime());
+                        return Long.compare(diff1, diff2);
+                    }
+                    catch(java.text.ParseException e)
+                    {
+                        e.printStackTrace();
+                        return 0;
+                    }
+
+
+                }
+            });
+
+            json = (JSONObject)json.get(closest_date);
+            
 
             r[0] = Float.parseFloat(json.get("1a. open (EUR)").toString());
             r[1] = r[0]*1.01f;
