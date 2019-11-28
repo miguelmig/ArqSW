@@ -20,9 +20,9 @@ public interface Subject {
 
 	/**
 	 * 
-	 * @param id_ativo
+	 * @param ativo
 	 */
-	void notifyObservers(String id_ativo);
+	void notifyObservers(Ativo ativo);
 
 
 }

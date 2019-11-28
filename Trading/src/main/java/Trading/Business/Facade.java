@@ -1,5 +1,8 @@
 package Trading.Business;
 
+import Trading.Data.TraderDAO;
+import Trading.Presentation.UI;
+
 import java.util.List;
 
 public class Facade {
@@ -8,6 +11,8 @@ public class Facade {
 	WalletManager walletManager;
 	LiveStock liveStock;
 	CFDManager CFDManager;
+	UI ui;
+	NotificationManager notificationManager;
 
     public void printPrecos(){
         for(Ativo a : liveStock.ativos.values()) System.out.println(a.toString());
@@ -47,7 +52,10 @@ public class Facade {
     }
 
     public int login(String email, String password) {
-        return this.traderManager.login(email, password);
+        int id_trader = this.traderManager.login(email, password);
+        if(id_trader != -1)
+            this.notificationManager.setWatchList(new TraderDAO().getAtivoWatchList(id_trader));
+        return id_trader;
     }
 
 
@@ -67,13 +75,16 @@ public class Facade {
         return this.walletManager.getSaldoTrader(id_trader);
     }
 
+    /********************** NOTIFICATION MANAGER ***************/
+    public void notifyAtivoChange(Ativo a, float percentage) { this.ui.notifyAtivoChange(a, percentage); }
 
-
-    public Facade(){
+    public Facade(UI ui){
         this.liveStock = new LiveStock();
         this.CFDManager = new CFDManager(this.liveStock);
         this.traderManager = new TraderManager();
         this.walletManager = new WalletManager();
+        this.ui = ui;
+        this.notificationManager = new NotificationManager(this, this.liveStock);
     }
 
 

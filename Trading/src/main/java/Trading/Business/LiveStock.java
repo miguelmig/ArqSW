@@ -28,7 +28,7 @@ public class LiveStock implements Subject {
 			ativo.setPrecoCompra(precos[1]);
 
 			// Notificar apenas quando os preços mudam
-			if(preco_compra_temp != precos[1] || preco_venda_temp != precos[0]) notifyObservers(ativo.getID());
+			if(preco_compra_temp != precos[1] || preco_venda_temp != precos[0]) notifyObservers(ativo);
 
 			this.ativos.put(ativo.getID(), ativo);
 			System.err.print(ativo.toString());
@@ -48,8 +48,8 @@ public class LiveStock implements Subject {
 	}
 
 	@Override
-	public void notifyObservers(String id_ativo) {
-		this.observers.forEach(o -> o.update(id_ativo));
+	public void notifyObservers(Ativo ativo) {
+		this.observers.forEach(o -> o.update(ativo));
 	}
 
 
@@ -60,6 +60,10 @@ public class LiveStock implements Subject {
 
 	public List<Ativo> getAtivos() {
 		return new ArrayList<>(this.ativos.values());
+	}
+
+	public Ativo getAtivo(String id_ativo) {
+		return this.ativos.get(id_ativo);
 	}
 
 

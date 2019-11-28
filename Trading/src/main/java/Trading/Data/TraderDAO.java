@@ -258,4 +258,27 @@ public class TraderDAO implements DAO<Integer, Trader> {
         }
     }
 
+    public List<String> getAtivoWatchList(Integer id_trader)
+    {
+        try {
+            DBConnection con = ConnectionManager.getConnection();
+            List<String> ativos = new ArrayList<>();
+
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM trader_watchlist WHERE id_trader = ?");
+            ps.setInt(1, id_trader);
+            ResultSet rs = con.returnQuery(ps);
+            while (rs.next()) {
+                String id_ativo = rs.getString("id_ativo");
+                ativos.add(id_ativo);
+            }
+
+            return ativos;
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }

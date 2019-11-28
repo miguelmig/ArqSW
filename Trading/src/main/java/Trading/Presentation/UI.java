@@ -329,9 +329,16 @@ public class UI {
 
 
     public static void main(String[] args) {
-		facade = new Facade();
         UI ui = new UI();
+		facade = new Facade(ui);
 
 		ui.execStartMenu();
 	}
+
+    public void notifyAtivoChange(Ativo a, float percentage) {
+        percentage *= 100.0f;
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        System.out.println("O valor do Ativo " + a.getNome() + " variou " + (percentage > 0 ? "+" : "") + df.format(percentage) + "%!");
+    }
 }

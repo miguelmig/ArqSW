@@ -4,8 +4,8 @@ public interface Observer {
 
 	/**
 	 * 
-	 * @param id_ativo
+	 * @param ativo
 	 */
-	void update(String id_ativo);
+	void update(Ativo ativo);
 
 }
