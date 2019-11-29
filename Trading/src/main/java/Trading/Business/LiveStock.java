@@ -14,11 +14,27 @@ public class LiveStock implements Subject {
 	LiveAPI liveAPI;
 
 
-	private void updateMercado() {
+	private void initMercado(){
 		AtivoDAO ativoDAO = new AtivoDAO();
-
 		List<Ativo> ativos_list = ativoDAO.list();
+		for(Ativo ativo : ativos_list) {
+			float[] precos = this.liveAPI.getPrecosAtivo(ativo.getID());
+
+			ativo.setPrecoVenda(precos[0]);
+			ativo.setPrecoCompra(precos[1]);
+
+			this.ativos.put(ativo.getID(), ativo);
+			System.err.print(ativo.toString());
+		}
+
+		System.out.println("Mercado inicializado!");
+	}
+
+	private void updateMercado() {
+		Collection<Ativo> ativos_list = ativos.values();
+
 		System.err.println("A ATUALIZAR ATIVOS");
+
 		for(Ativo ativo : ativos_list) {
 			float[] precos = this.liveAPI.getPrecosAtivo(ativo.getID());
 			float preco_venda_temp = ativo.getPrecoVenda();
@@ -71,7 +87,7 @@ public class LiveStock implements Subject {
 		this.ativos = new HashMap<>();
 		this.liveAPI = new AlphaVantageAPI();
 		this.observers = new ArrayList<>();
-		updateMercado();
+		initMercado();
 
 		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 		exec.scheduleAtFixedRate(new Runnable() {

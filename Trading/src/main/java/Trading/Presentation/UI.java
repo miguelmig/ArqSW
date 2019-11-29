@@ -79,6 +79,11 @@ public class UI {
         return success;
     }
 
+    private void logoff() {
+        this.facade.stopNotification(id_trader);
+        id_trader = -1;
+    }
+
     private void registar() {
         String email, pw, data_nasc;
 
@@ -104,13 +109,14 @@ public class UI {
             showOps(menu);
             opcao = readOp();
             switch(opcao){
-                case 0: id_trader = -1;  break;
+                case 0: logoff();  break;
                 case 1: opcao = 0; execMercado(); break;
                 case 2: opcao = 0; execPortfolio(); break;
                 case 3: opcao = 0; execHistorico(); break;
                 case 4: opcao = 0; execSaldo(); break;
-                case 5: opcao = 0; execAdicionarFundos(); break;
-                case 6: opcao = 0; execLevantarFundos(); break;
+                case 5: opcao = 0; execWatchlist(); break;
+                case 6: opcao = 0; execAdicionarFundos(); break;
+                case 7: opcao = 0; execLevantarFundos(); break;
                 default: System.out.println("Insira uma opção correta");
             }
         } while(opcao != 0);
@@ -162,21 +168,38 @@ public class UI {
         System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
 
         System.out.println("X: Abrir CFD relativo ao Ativo X");
+        System.out.println("WX: Adicionar o ativo X à Watchlist");
         System.out.println("0: Retroceder");
 
         do {
-            opcao = readOp();
-            if (isBetween(opcao, 1, ativos.size())){
-                execAbrirCFD(ativos.get(opcao-1));
-                opcao = 0;
+            String op = sc.nextLine();
+            // VERIFICA SE É PARA ADICIONAR À WISHLIST OU SE APENAS É PARA ABRIR UM CFD
+            if(op.charAt(0) == 'W'){
+                String op2 = op.replace('W', '0');
+                System.out.println(op2);
+                opcao = Integer.parseInt(op2);
+                if (isBetween(opcao, 1, ativos.size())){
+                    this.facade.adicionaWatchlist(ativos.get(opcao-1));
+                    System.out.println("Ativo adicionado com sucesso à wishlist");
+                    opcao = 0;
+                }
+                else System.out.println("Insira uma opção correta");
             }
-            else System.out.println("Insira uma opção correta");
+            else {
+                opcao = Integer.parseInt(op);
+
+                if (isBetween(opcao, 1, ativos.size())){
+                    execAbrirCFD(ativos.get(opcao-1));
+                    opcao = 0;
+                }
+                else System.out.println("Insira uma opção correta");
+            }
+
 
         } while(opcao != 0);
 
         execTraderMenu();
     }
-
 
 
     private boolean isBetween(int opcao, int min, int max) {
@@ -218,6 +241,37 @@ public class UI {
             System.out.println("Erro: Não possui saldo suficiente para efetuar a operação.");
         }
     }
+
+    private void execWatchlist(){
+        List<Ativo> watchlist = facade.getWatchlist();
+
+        // FIXME: 29/11/2019 Apresentar wishlist
+        for(Ativo ativo : watchlist){
+            System.out.println(ativo.getID());
+        }
+
+        System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
+
+        System.out.println("X: Remover Ativo X da watchlist");
+        System.out.println("0: Retroceder");
+
+        int opcao;
+        do {
+            opcao = readOp();
+            if (watchlist.size() > 0 && watchlist.size() <= opcao ){
+                if(opcao > 0){
+                    facade.removeWatchlist(watchlist.get(opcao-1));
+                    System.out.println("Removido com sucesso");
+                    opcao = 0;
+                }
+            }
+            else System.out.println("Insira uma opção correta");
+
+        } while(opcao != 0);
+
+        execTraderMenu();
+    }
+
 
     private void execPortfolio() {
         Map<Integer, CFD> portfolio = facade.getPortfolioTrader(id_trader).stream().collect(Collectors.toMap(CFD :: getID, cfd -> cfd));
@@ -268,9 +322,7 @@ public class UI {
 
         } while(opcao != 0);
 
-
         execTraderMenu();
-
     }
 
     private void execHistorico() {

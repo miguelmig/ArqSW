@@ -57,6 +57,16 @@ public class Comodity implements Ativo {
         return this.id + "   |   Preco compra: " + df.format(this.preco_compra) + "   |   Preco venda: " + df.format(this.preco_venda) + "   |   " + this.nome + "   |   Comodity \n";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this==o) return true;
+        if ( o==null || this.getClass() != o.getClass()) return false;
+
+        Comodity c = (Comodity) o;
+
+        return this.id == c.getID();
+    }
+
     public Comodity(String id, String nome, float preco_compra, float preco_venda){
         this.id = id;
         this.nome = nome;

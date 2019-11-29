@@ -10,8 +10,7 @@ public class Trader {
 	private String password;
 	private String data_nasc;
 	private float saldo;
-
-
+	private List<Ativo> watchlist;
 
 
 	public List<CFD> getCurrentCFDs() {
@@ -71,6 +70,13 @@ public class Trader {
 		this.currentCFDs = new ArrayList<>();
 	}
 
+	public void setWatchlist(List<Ativo> watchlist) {
+		this.watchlist = watchlist;
+	}
+
+	public List<Ativo> getWatchlist() {
+		return watchlist;
+	}
 
 	public Trader(int id, String email, String password, String data_nasc, float saldo) {
 		this.id = id;
@@ -79,6 +85,7 @@ public class Trader {
 		this.data_nasc = data_nasc;
 		this.saldo = saldo;
 		this.currentCFDs = new ArrayList<>();
+		this.watchlist = new ArrayList<>();
 	}
 
 
@@ -95,4 +102,6 @@ public class Trader {
     public void addSaldo(float valor) {
 		this.saldo += valor;
     }
+
+
 }

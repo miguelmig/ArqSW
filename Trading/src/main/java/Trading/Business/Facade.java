@@ -54,7 +54,7 @@ public class Facade {
     public int login(String email, String password) {
         int id_trader = this.traderManager.login(email, password);
         if(id_trader != -1)
-            this.notificationManager.setWatchList(new TraderDAO().getAtivoWatchList(id_trader));
+            this.notificationManager.setWatchList((new TraderDAO().get(id_trader)).getWatchlist());
         return id_trader;
     }
 
@@ -75,8 +75,28 @@ public class Facade {
         return this.walletManager.getSaldoTrader(id_trader);
     }
 
+
     /********************** NOTIFICATION MANAGER ***************/
-    public void notifyAtivoChange(Ativo a, float percentage) { this.ui.notifyAtivoChange(a, percentage); }
+    public void notifyAtivoChange(Ativo a, float percentage) {
+        this.ui.notifyAtivoChange(a, percentage);
+    }
+
+    public void adicionaWatchlist(Ativo ativo) {
+        this.notificationManager.adicionaWatchlist(ativo);
+    }
+
+    public void removeWatchlist(Ativo ativo) {
+        this.notificationManager.removeWatchlist(ativo);
+    }
+
+    public List<Ativo> getWatchlist() {
+        return this.notificationManager.getWatchlist();
+    }
+
+    public void stopNotification(int id_trader) {
+        this.notificationManager.reset(id_trader);
+    }
+
 
     public Facade(UI ui){
         this.liveStock = new LiveStock();

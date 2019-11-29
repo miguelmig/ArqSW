@@ -1,5 +1,8 @@
 package Trading.Business;
 
+import Trading.Data.DAO;
+import Trading.Data.TraderDAO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,20 +23,19 @@ public class NotificationManager implements Observer
         liveStock = l;
     }
 
-    public void setWatchList(List<String> watch)
+    public void setWatchList(List<Ativo> watch)
     {
         watchlist = new ArrayList<>();
         if(watch == null)
             return;
 
-        for(String id_ativo : watch)
-        {
-            Ativo ativo = this.liveStock.getAtivo(id_ativo);
+        for(Ativo a : watch) {
+            Ativo ativo = this.liveStock.getAtivo(a.getID());
             if(ativo != null)
                 watchlist.add(ativo);
         }
-        System.out.println("Watching : " + watchlist.get(0).toString());
-        update(watchlist.get(0));
+        //System.out.println("Watching : " + watchlist.get(0).toString());
+        //update(watchlist.get(0));
     }
     /**
      *
@@ -45,7 +47,7 @@ public class NotificationManager implements Observer
         for(int i = 0; i < watchlist.size(); ++i)
         {
             Ativo a = watchlist.get(i);
-            if(!a.getID().equals(ativo.getID()) )
+            if(!a.getID().equals(ativo.getID()))
                 continue;
 
             float difference = a.getPrecoCompra() - ativo.getPrecoCompra();
@@ -66,4 +68,26 @@ public class NotificationManager implements Observer
         }
     }
 
+    public List<Ativo> getWatchlist() {
+        return this.watchlist;
+    }
+
+    public void removeWatchlist(Ativo ativo) {
+        this.watchlist.remove(ativo);
+    }
+
+    public void adicionaWatchlist(Ativo ativo) {
+        this.watchlist.add(ativo);
+    }
+
+    public void reset(int id_trader) {
+        DAO<Integer, Trader> traderDAO = new TraderDAO();
+        Trader trader = traderDAO.get(id_trader);
+
+        trader.setWatchlist(watchlist);
+
+        traderDAO.put(trader.getID(), trader);
+
+        this.watchlist = new ArrayList<>();
+    }
 }

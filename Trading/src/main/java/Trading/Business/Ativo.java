@@ -36,4 +36,6 @@ public interface Ativo {
 
 	String toString();
 
+	boolean equals(Object o);
+
 }

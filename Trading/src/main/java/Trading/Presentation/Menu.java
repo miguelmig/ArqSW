@@ -12,8 +12,9 @@ public class Menu {
                     "2 - Consultar portfólio",
                     "3 - Consultar histórico",
                     "4 - Consultar saldo",
-                    "5 - Adicionar fundos",
-                    "6 - Levantar fundos",
+                    "5 - Consultar watchlist",
+                    "6 - Adicionar fundos",
+                    "7 - Levantar fundos",
                     "0 - Logoff"},
         };
 

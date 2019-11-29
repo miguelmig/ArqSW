@@ -14,7 +14,7 @@ public class CFDManager implements Observer {
 	TraderCFDManager traderCFDManager;
 
 	/**
-	 * 
+	 *
 	 * @param id_cfd
 	 */
 	public void fecharCFD(int id_cfd) {
@@ -24,7 +24,6 @@ public class CFDManager implements Observer {
 
 		// Para atualizar os preços do ativo
 		Ativo ativo = liveStock.ativos.get(cfd.getAtivo().getID());
-
 
 		OpenCloseStrategy ocs;
 		if(cfd instanceof Long) ocs = new LongStrategy();

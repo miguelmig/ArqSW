@@ -19,10 +19,11 @@ public class TraderDAO implements DAO<Integer, Trader> {
             s.setString(3, trader.getPassword());
             s.setString(4, trader.getDataNasc());
             s.setFloat(5, trader.getSaldo());
-
             s.setFloat(6, trader.getSaldo());
 
            con.query(s);
+
+            // FIXME: 29/11/2019 FAZER O INSERT DA WATCHLIST
 
 
         } catch (SQLException e) {
@@ -47,6 +48,7 @@ public class TraderDAO implements DAO<Integer, Trader> {
                 trader.setDataNasc(rs.getString("data_nasc"));
                 trader.setSaldo(rs.getFloat("saldo"));
 
+                // FIXME: 29/11/2019 REFACTOR : método getCurrentCFDs
                 PreparedStatement ps2 = con.prepareStatement("SELECT * FROM cfd WHERE trader_id = ?");
                 ps2.setInt(1, rs.getInt("id_trader"));
                 ResultSet cfds_rs = con.returnQuery(ps2);
@@ -74,7 +76,7 @@ public class TraderDAO implements DAO<Integer, Trader> {
                 }
 
                 trader.setCurrentCFDs(cfds);
-
+                trader.setWatchlist(getAtivoWatchList(id_trader));
                 return trader;
             }
 
@@ -93,6 +95,7 @@ public class TraderDAO implements DAO<Integer, Trader> {
             List<Trader> traders = new ArrayList<>();
             DBConnection con = ConnectionManager.getConnection();
 
+            // FIXME: 29/11/2019 ir buscar so os ids e depois fazer get(id) para nao ser um método gigante?
             PreparedStatement ps = con.prepareStatement("SELECT * FROM trader");
 
             ResultSet rs = con.returnQuery(ps);
@@ -258,18 +261,20 @@ public class TraderDAO implements DAO<Integer, Trader> {
         }
     }
 
-    public List<String> getAtivoWatchList(Integer id_trader)
+    private List<Ativo> getAtivoWatchList(Integer id_trader)
     {
         try {
             DBConnection con = ConnectionManager.getConnection();
-            List<String> ativos = new ArrayList<>();
+            List<Ativo> ativos = new ArrayList<>();
 
             PreparedStatement ps = con.prepareStatement("SELECT * FROM trader_watchlist WHERE id_trader = ?");
             ps.setInt(1, id_trader);
             ResultSet rs = con.returnQuery(ps);
             while (rs.next()) {
                 String id_ativo = rs.getString("id_ativo");
-                ativos.add(id_ativo);
+                AtivoDAO ativoDAO = new AtivoDAO();
+                Ativo ativo = ativoDAO.get(id_ativo);
+                ativos.add(ativo);
             }
 
             return ativos;
