@@ -21,10 +21,19 @@ public class TraderDAO implements DAO<Integer, Trader> {
             s.setFloat(5, trader.getSaldo());
             s.setFloat(6, trader.getSaldo());
 
-           con.query(s);
+            con.query(s);
+            PreparedStatement s_delete = con.prepareStatement("DELETE FROM trader_watchlist WHERE id_trader = ? ");
+            s_delete.setInt(1, id);
+            con.query(s_delete);
 
-            // FIXME: 29/11/2019 FAZER O INSERT DA WATCHLIST
-
+            for(Ativo a : trader.getWatchlist())
+            {
+                System.err.println("Saving watchlist asset: " + a.getNome());
+                PreparedStatement s2 = con.prepareStatement("INSERT IGNORE INTO trader_watchlist (id_trader, id_ativo) VALUES (?, ?)");
+                s2.setInt(1, id);
+                s2.setString(2, a.getID());
+                con.query(s2);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,6 +169,11 @@ public class TraderDAO implements DAO<Integer, Trader> {
                 int id_cfd = cfds_rs.getInt("id_cfd");
                 cfd_dao.remove(id_cfd);
             }
+
+            PreparedStatement s_delete = con.prepareStatement("DELETE FROM trader_watchlist WHERE id_trader = ? ");
+            s_delete.setInt(1, id);
+            con.query(s_delete);
+
 
             PreparedStatement ps2 = con.prepareStatement("DELETE FROM trader WHERE id_trader = ? ");
             ps2.setInt(1, id);

@@ -133,7 +133,7 @@ public class UI {
 
         int i = 1, opcao;
         System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
-        System.out.println("| Id  |  Nome | Preço Compra |  Preço Venda |     Nome    |   Tipo   |");
+        System.out.println("|  #  |   ID  | Preço Compra |  Preço Venda |     Nome    |   Tipo   |");
         System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
         for(Ativo a : ativos)
         {
@@ -179,7 +179,7 @@ public class UI {
                 System.out.println(op2);
                 opcao = Integer.parseInt(op2);
                 if (isBetween(opcao, 1, ativos.size())){
-                    this.facade.adicionaWatchlist(ativos.get(opcao-1));
+                    this.facade.adicionaWatchlist(id_trader, ativos.get(opcao-1));
                     System.out.println("Ativo adicionado com sucesso à wishlist");
                     opcao = 0;
                 }
@@ -245,22 +245,51 @@ public class UI {
     private void execWatchlist(){
         List<Ativo> watchlist = facade.getWatchlist();
 
-        // FIXME: 29/11/2019 Apresentar wishlist
-        for(Ativo ativo : watchlist){
-            System.out.println(ativo.getID());
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        int i = 1;
+        System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
+        System.out.println("|  #  |   ID  | Preço Compra |  Preço Venda |     Nome    |   Tipo   |");
+        System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
+        for(Ativo a : watchlist){
+            System.out.print('|');
+            System.out.print(String.format(" %-4s", Integer.toString(i)));
+            System.out.print("|");
+            System.out.print(String.format(" %-6s", a.getID()));
+            System.out.print("|");
+            System.out.print(String.format(" %-13s", df.format(a.getPrecoCompra())));
+            System.out.print("|");
+            System.out.print(String.format(" %-13s", df.format(a.getPrecoVenda())));
+            System.out.print("|");
+            System.out.print(String.format(" %-12s", a.getNome()));
+            System.out.print("|");
+            if(a instanceof Acao)
+            {
+                System.out.print(String.format(" %-9s", "Ação"));
+            }
+            else if(a instanceof Comodity)
+            {
+                System.out.print(String.format(" %-9s", "Comodity"));
+            }
+            else if(a instanceof Crypto)
+            {
+                System.out.print(String.format(" %-9s", "Crypto"));
+            }
+            System.out.println("|");
+            i++;
         }
 
-        System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
-
+        System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
+        System.out.println("Size: " + watchlist.size());
         System.out.println("X: Remover Ativo X da watchlist");
         System.out.println("0: Retroceder");
 
         int opcao;
         do {
             opcao = readOp();
-            if (watchlist.size() > 0 && watchlist.size() <= opcao ){
+            if (watchlist.size() > 0 && watchlist.size() >= opcao ){
                 if(opcao > 0){
-                    facade.removeWatchlist(watchlist.get(opcao-1));
+                    facade.removeWatchlist(id_trader, watchlist.get(opcao-1));
                     System.out.println("Removido com sucesso");
                     opcao = 0;
                 }

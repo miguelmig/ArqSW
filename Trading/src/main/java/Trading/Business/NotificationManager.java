@@ -34,6 +34,7 @@ public class NotificationManager implements Observer
             if(ativo != null)
                 watchlist.add(ativo);
         }
+
         //System.out.println("Watching : " + watchlist.get(0).toString());
         //update(watchlist.get(0));
     }
@@ -72,12 +73,23 @@ public class NotificationManager implements Observer
         return this.watchlist;
     }
 
-    public void removeWatchlist(Ativo ativo) {
+    public void removeWatchlist(int id_trader, Ativo ativo) {
         this.watchlist.remove(ativo);
+        saveWatchList(id_trader);
     }
 
-    public void adicionaWatchlist(Ativo ativo) {
+    public void adicionaWatchlist(int id_trader, Ativo ativo) {
         this.watchlist.add(ativo);
+        saveWatchList(id_trader);
+    }
+
+    private void saveWatchList(int id_trader) {
+        DAO<Integer, Trader> traderDAO = new TraderDAO();
+        Trader trader = traderDAO.get(id_trader);
+        trader.setWatchlist(this.watchlist);
+
+        traderDAO.put(id_trader, trader);
+        System.err.println("Saving!");
     }
 
     public void reset(int id_trader) {

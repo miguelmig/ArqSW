@@ -81,12 +81,13 @@ public class Facade {
         this.ui.notifyAtivoChange(a, percentage);
     }
 
-    public void adicionaWatchlist(Ativo ativo) {
-        this.notificationManager.adicionaWatchlist(ativo);
+    public void adicionaWatchlist(int id_trader, Ativo ativo) {
+        this.notificationManager.adicionaWatchlist(id_trader, ativo);
+
     }
 
-    public void removeWatchlist(Ativo ativo) {
-        this.notificationManager.removeWatchlist(ativo);
+    public void removeWatchlist(int id_trader, Ativo ativo) {
+        this.notificationManager.removeWatchlist(id_trader, ativo);
     }
 
     public List<Ativo> getWatchlist() {
