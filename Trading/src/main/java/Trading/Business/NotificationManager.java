@@ -89,7 +89,6 @@ public class NotificationManager implements Observer
         trader.setWatchlist(this.watchlist);
 
         traderDAO.put(id_trader, trader);
-        System.err.println("Saving!");
     }
 
     public void reset(int id_trader) {

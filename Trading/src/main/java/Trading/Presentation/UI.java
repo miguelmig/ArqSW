@@ -280,7 +280,6 @@ public class UI {
         }
 
         System.out.println("+-----+-------+--------------+--------------+-------------+----------+");
-        System.out.println("Size: " + watchlist.size());
         System.out.println("X: Remover Ativo X da watchlist");
         System.out.println("0: Retroceder");
 
