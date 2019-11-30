@@ -38,4 +38,6 @@ public interface Ativo {
 
 	boolean equals(Object o);
 
+	Ativo clone();
+
 }

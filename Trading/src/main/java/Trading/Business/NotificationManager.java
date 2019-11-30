@@ -32,7 +32,7 @@ public class NotificationManager implements Observer
         for(Ativo a : watch) {
             Ativo ativo = this.liveStock.getAtivo(a.getID());
             if(ativo != null)
-                watchlist.add(ativo);
+                watchlist.add(ativo.clone());
         }
 
         //System.out.println("Watching : " + watchlist.get(0).toString());
@@ -79,7 +79,7 @@ public class NotificationManager implements Observer
     }
 
     public void adicionaWatchlist(int id_trader, Ativo ativo) {
-        this.watchlist.add(ativo);
+        this.watchlist.add(ativo.clone());
         saveWatchList(id_trader);
     }
 

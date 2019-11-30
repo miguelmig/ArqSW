@@ -67,6 +67,13 @@ public class Comodity implements Ativo {
         return this.id == c.getID();
     }
 
+    @Override
+    public Ativo clone()
+    {
+        return new Comodity(this.id, this.nome, this.preco_compra, this.preco_venda);
+    }
+
+
     public Comodity(String id, String nome, float preco_compra, float preco_venda){
         this.id = id;
         this.nome = nome;
