@@ -117,11 +117,16 @@ public class UI {
                 case 5: opcao = 0; execWatchlist(); break;
                 case 6: opcao = 0; execAdicionarFundos(); break;
                 case 7: opcao = 0; execLevantarFundos(); break;
+                case 8: opcao = 8; testeNotification(); break;
                 default: System.out.println("Insira uma opção correta");
             }
         } while(opcao != 0);
 
         execStartMenu();
+    }
+
+    private void testeNotification() {
+        facade.testeNotification();
     }
 
 
@@ -309,7 +314,7 @@ public class UI {
         df.setMaximumFractionDigits(2);
 
         System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
-        System.out.println("|  Id  | Total (€) | Unidade | Stop Loss | Take Profit | Live Venda | Live Compra |");
+        System.out.println("|  ID  | Total (€) | Unidade | Stop Loss | Take Profit | Live Venda | Live Compra |");
         System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
         //System.out.println("ID \t| Total (€) \t| €/Unidade \t| Stop Loss \t| Take Profit \t| Live Venda \t| Live Compra");
         for(CFD cfd : portfolio.values())
@@ -335,7 +340,7 @@ public class UI {
 
         System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
 
-        System.out.println("X: Fechar CFD relativo ao Ativo X");
+        System.out.println("X: Fechar CFD X");
         System.out.println("0: Retroceder");
 
         int opcao;

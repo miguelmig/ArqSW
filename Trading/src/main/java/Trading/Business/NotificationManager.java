@@ -42,25 +42,25 @@ public class NotificationManager implements Observer
      *
      * @param ativo
      */
-    public void update(Ativo ativo)
-    {
+    public void update(Ativo ativo) {
+        System.out.println("entrou!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-        for(int i = 0; i < watchlist.size(); ++i)
-        {
+
+        for(int i = 0; i < watchlist.size(); i++) {
             Ativo a = watchlist.get(i);
             if(!a.getID().equals(ativo.getID()))
                 continue;
-
+            System.out.println("ola!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             float difference = a.getPrecoCompra() - ativo.getPrecoCompra();
+            System.out.println(difference);
             float percentage = 1;
-            if(ativo.getPrecoCompra() != 0)
-            {
+            if(ativo.getPrecoCompra() != 0) {
                 percentage = difference / a.getPrecoCompra();
             }
 
-            if(Math.abs(percentage) > NOTIFICATION_THRESHOLD)
-            {
+            if(Math.abs(percentage) > NOTIFICATION_THRESHOLD) {
                 // Notify!
+                System.out.println("NOTIFICAR!");
                 facade.notifyAtivoChange(a, percentage);
             }
 
