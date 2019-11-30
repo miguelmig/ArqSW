@@ -98,6 +98,14 @@ public class Facade {
         this.notificationManager.reset(id_trader);
     }
 
+    public void testeNotification() {
+        Ativo a = liveStock.ativos.get("GOLD");
+        a.setPrecoCompra(1000);
+        //liveStock.ativos.put(a.getID(), a);
+        this.liveStock.notifyObservers(a);
+    }
+
+
 
     public Facade(UI ui){
         this.liveStock = new LiveStock();
