@@ -1,6 +1,7 @@
 package Trading.Business;
 
 public class ShortStrategy implements OpenCloseStrategy {
+
     @Override
     public int abrirCFD(CFD cfd) {
         Trader trader = cfd.getTrader();
@@ -22,7 +23,7 @@ public class ShortStrategy implements OpenCloseStrategy {
 
     private void gerirFundos(Trader trader, float total) {
         WalletManager wm = new WalletManager();
-        if (total > 0) wm.adicionarFundos(trader.getID(), total); // Podia ser so adicionar fundos, adicionava fundos negativos, mas assim sabe-se qual foi o método que foi usado
+        if (total > 0) wm.adicionarFundos(trader.getID(), total); // Para ser possível ver o método no stacktrace
         else wm.removerFundos(trader.getID(), -total);
     }
 }

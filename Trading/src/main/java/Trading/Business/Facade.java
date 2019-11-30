@@ -7,22 +7,24 @@ import java.util.List;
 
 public class Facade {
 
-	TraderManager traderManager;
-	WalletManager walletManager;
-	LiveStock liveStock;
-	CFDManager CFDManager;
-	UI ui;
-	NotificationManager notificationManager;
+	private TraderManager traderManager;
+	private WalletManager walletManager;
+	private LiveStock liveStock;
+	private CFDManager CFDManager;
+	private UI ui;
+	private NotificationManager notificationManager;
 
     public void printPrecos(){
         for(Ativo a : liveStock.ativos.values()) System.out.println(a.toString());
     }
+
 
     /********************** Live Stock ***********************/
     public List<Ativo> getMercado() {
 
         return this.liveStock.getAtivos();
     }
+
 
 
     /********************** CFD MANAGER **********************/
@@ -45,6 +47,7 @@ public class Facade {
     }
 
 
+
     /********************** USER MANAGER **********************/
 
     public int registaTrader(String email, String password, String data_nasc) {
@@ -57,7 +60,6 @@ public class Facade {
             this.notificationManager.setWatchList((new TraderDAO().get(id_trader)).getWatchlist());
         return id_trader;
     }
-
 
 
 
@@ -74,6 +76,7 @@ public class Facade {
     public float getSaldoTrader(int id_trader) {
         return this.walletManager.getSaldoTrader(id_trader);
     }
+
 
 
     /********************** NOTIFICATION MANAGER ***************/
@@ -101,7 +104,6 @@ public class Facade {
     public void testeNotification() {
         Ativo a = liveStock.ativos.get("GOLD");
         a.setPrecoCompra(1000);
-        //liveStock.ativos.put(a.getID(), a);
         this.liveStock.notifyObservers(a);
     }
 

@@ -12,10 +12,8 @@ public class NotificationManager implements Observer
     private Facade facade;
     private LiveStock liveStock;
 
-    /*
-     * Minima variação necessária para ser emitida uma notificação.
-     */
-    private static final float NOTIFICATION_THRESHOLD = 0.05f;
+    private static final float NOTIFICATION_THRESHOLD = 0.05f; // Minima variação necessária para ser emitida uma notificação.
+
     public NotificationManager(Facade facade, LiveStock l)
     {
         this.facade = facade;
@@ -34,23 +32,16 @@ public class NotificationManager implements Observer
             if(ativo != null)
                 watchlist.add(ativo.clone());
         }
-
-        //System.out.println("Watching : " + watchlist.get(0).toString());
-        //update(watchlist.get(0));
     }
-    /**
-     *
-     * @param ativo
-     */
-    public void update(Ativo ativo) {
 
+
+    public void update(Ativo ativo) {
 
         for(int i = 0; i < watchlist.size(); i++) {
             Ativo a = watchlist.get(i);
             if(!a.getID().equals(ativo.getID()))
                 continue;
             float difference = ativo.getPrecoCompra() - a.getPrecoCompra();
-            System.out.println(difference);
             float percentage = 1;
             if(ativo.getPrecoCompra() != 0) {
                 percentage = difference / a.getPrecoCompra();
@@ -61,7 +52,7 @@ public class NotificationManager implements Observer
                 facade.notifyAtivoChange(a, percentage);
             }
 
-            watchlist.set(i, ativo);
+            watchlist.set(i, ativo.clone());
             return;
         }
     }

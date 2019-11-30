@@ -1,6 +1,7 @@
 package Trading.Business;
 
 public class LongStrategy implements OpenCloseStrategy {
+
     @Override
     public int abrirCFD(CFD cfd) {
         Trader trader = cfd.getTrader();
@@ -34,6 +35,7 @@ public class LongStrategy implements OpenCloseStrategy {
 
         cfd.fecha();
     }
+
 
     private void adicionaFundos(Trader trader, float total) {
         WalletManager wm = new WalletManager();

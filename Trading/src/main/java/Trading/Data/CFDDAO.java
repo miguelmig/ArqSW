@@ -67,7 +67,7 @@ public class CFDDAO implements DAO<Integer, CFD> {
 
                 Date fecho = null;
                 if(closed) {
-                    fecho = rs.getDate("data_fecho"); //new Date(rs.getTimestamp("data_fecho").getTime());
+                    fecho = rs.getDate("data_fecho");
                 }
 
                 return creatorCFD.loadMethod(id, trader, ativo, unidades, total, tipo, !closed, stop_loss, take_profit, fecho);

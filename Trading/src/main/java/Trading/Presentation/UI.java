@@ -316,11 +316,10 @@ public class UI {
         System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
         System.out.println("|  ID  | Total (€) | Unidade | Stop Loss | Take Profit | Live Venda | Live Compra |");
         System.out.println("+------+-----------+---------+-----------+-------------+------------+-------------+");
-        //System.out.println("ID \t| Total (€) \t| €/Unidade \t| Stop Loss \t| Take Profit \t| Live Venda \t| Live Compra");
+
         for(CFD cfd : portfolio.values())
         {
             Ativo ativo_cfd = mercado.get(cfd.getAtivo().getID());
-            //System.out.println(cfd.toString() + " \t\t\t| " + ativo_cfd.getPrecoVenda() + " \t\t| " + ativo_cfd.getPrecoCompra());
             System.out.print('|');
             System.out.print(String.format(" %-5s", Integer.toString(cfd.getID())));
             System.out.print("|");
@@ -365,7 +364,7 @@ public class UI {
         df.setMaximumFractionDigits(2);
 
         System.out.println("+------+-----------+---------+-----------+-------------+");
-        System.out.println("|  Id  | Total (€) | Unidade | Stop Loss | Take Profit |");
+        System.out.println("|  ID  | Total (€) | Unidade | Stop Loss | Take Profit |");
         System.out.println("+------+-----------+---------+-----------+-------------+");
         for(CFD cfd : historico){
             System.out.print('|');
@@ -379,7 +378,6 @@ public class UI {
             System.out.print("|");
             System.out.print(String.format(" %-12s", df.format(cfd.getTakeProfit())));
             System.out.println("|");
-            //System.out.println(cfd.toString());
         }
 
         System.out.println("+------+-----------+---------+-----------+-------------+");

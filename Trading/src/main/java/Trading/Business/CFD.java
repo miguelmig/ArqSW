@@ -18,34 +18,14 @@ public interface CFD {
 
 	Ativo getAtivo();
 
-	/**
-	 * 
-	 * @param id
-	 */
 	void setID(int id);
 
-	/**
-	 * 
-	 * @param stop_loss
-	 */
 	void setStopLoss(float stop_loss);
 
-	/**
-	 * 
-	 * @param take_profit
-	 */
 	void setTakeProfit(float take_profit);
 
-	/**
-	 * 
-	 * @param unidades
-	 */
 	void setUnidades(float unidades);
 
-	/**
-	 * 
-	 * @param ativo
-	 */
 	void setAtivo(Ativo ativo);
 
 	void calculaTotal();

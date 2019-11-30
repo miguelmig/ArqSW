@@ -3,8 +3,6 @@ package Trading.Business;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -52,9 +50,7 @@ public class AlphaVantageAPI implements LiveAPI {
                 parse = new JSONParser();
                 return (JSONObject) parse.parse(inline);
             }
-
             return json;
-
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -64,10 +60,6 @@ public class AlphaVantageAPI implements LiveAPI {
     }
 
 
-	/**
-	 * 
-	 * @param jobj
-	 */
 	private float[] parseData(JSONObject jobj) {
         float r[] = new float[2];
         JSONObject json;
@@ -97,13 +89,10 @@ public class AlphaVantageAPI implements LiveAPI {
                         e.printStackTrace();
                         return 0;
                     }
-
-
                 }
             });
 
             json = (JSONObject)json.get(closest_date);
-            
 
             r[0] = Float.parseFloat(json.get("1a. open (EUR)").toString());
             r[1] = r[0]*1.01f;

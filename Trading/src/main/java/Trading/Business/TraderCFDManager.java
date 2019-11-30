@@ -15,7 +15,7 @@ class TraderCFDManager {
         cfds_by_trader = new HashMap<>();
     }
 
-    public void addCFD(CFD cfd) {
+    void addCFD(CFD cfd) {
         int id_trader = cfd.getTrader().getID();
         List<CFD> cfds = cfds_by_trader.get(id_trader);
         if(cfds == null) {
@@ -28,7 +28,7 @@ class TraderCFDManager {
         cfds.add(cfd);
     }
 
-    public List<CFD> getPortfolioTrader(int id_trader) {
+    List<CFD> getPortfolioTrader(int id_trader) {
         List<CFD> cfds = cfds_by_trader.get(id_trader);
         if(cfds == null)
             return new ArrayList<>();
@@ -36,7 +36,7 @@ class TraderCFDManager {
         return cfds;
     }
 
-    public List<CFD> getHistoricoTrader(int id_trader) {
+    List<CFD> getHistoricoTrader(int id_trader) {
         TraderDAO traderDAO = new TraderDAO();
 
         List<CFD> closed_cfds = traderDAO.getClosedCFD(id_trader);
@@ -44,7 +44,7 @@ class TraderCFDManager {
         return  closed_cfds;
     }
 
-    public void removeCFD(CFD cfd) {
+    void removeCFD(CFD cfd) {
         List<CFD> cfds_trader = this.cfds_by_trader.get(cfd.getTrader().getID());
         cfds_trader.remove(cfd);
 

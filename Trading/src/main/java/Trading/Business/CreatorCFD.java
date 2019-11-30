@@ -18,6 +18,7 @@ public class CreatorCFD {
 		else return null;
 	}
 
+
 	public CFD loadMethod(int id, Trader trader, Ativo ativo, float unidades, float total, String type, boolean aberto, float stop_loss, float take_profit, Date data_fecho) {
 
 		if(type.equalsIgnoreCase("LONG")){

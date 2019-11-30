@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Trader {
 
-	List<CFD> currentCFDs;
+	private List<CFD> currentCFDs;
 	private int id;
 	private String email;
 	private String password;
@@ -78,6 +78,17 @@ public class Trader {
 		return watchlist;
 	}
 
+	public void subSaldo(float valor) {
+		this.saldo -= valor;
+
+	}
+
+	public void addSaldo(float valor) {
+		this.saldo += valor;
+	}
+
+
+
 	public Trader(int id, String email, String password, String data_nasc, float saldo) {
 		this.id = id;
 		this.email = email;
@@ -87,21 +98,5 @@ public class Trader {
 		this.currentCFDs = new ArrayList<>();
 		this.watchlist = new ArrayList<>();
 	}
-
-
-
-	/**
-	 *
-	 * @param valor
-	 */
-    public void subSaldo(float valor) {
-		this.saldo -= valor;
-
-	}
-
-    public void addSaldo(float valor) {
-		this.saldo += valor;
-    }
-
 
 }

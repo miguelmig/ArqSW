@@ -26,9 +26,7 @@ public class TraderDAO implements DAO<Integer, Trader> {
             s_delete.setInt(1, id);
             con.query(s_delete);
 
-            for(Ativo a : trader.getWatchlist())
-            {
-                System.err.println("Saving watchlist asset: " + a.getNome());
+            for(Ativo a : trader.getWatchlist()) {
                 PreparedStatement s2 = con.prepareStatement("INSERT IGNORE INTO trader_watchlist (id_trader, id_ativo) VALUES (?, ?)");
                 s2.setInt(1, id);
                 s2.setString(2, a.getID());

@@ -1,6 +1,5 @@
 package Trading.Business;
 
-import Trading.Data.DAO;
 import Trading.Data.TraderDAO;
 
 public class TraderManager {
@@ -10,7 +9,6 @@ public class TraderManager {
 		int next_id = traderDAO.size() + 1 ;
 		Trader t = new Trader(next_id, email, password, data_nasc, 1000);
 
-		// FIXME: 10/11/2019 ver se já existe
 		if(traderDAO.getByEmail(email) == null){
 			traderDAO.put(next_id, t);
 			return 1;
@@ -18,11 +16,7 @@ public class TraderManager {
 		else return 0;
 	}
 
-	/**
-	 *
-	 * @param email
-	 * @param password
-	 */
+
 	public int login(String email, String password) {
 		TraderDAO traderDAO = new TraderDAO();
 

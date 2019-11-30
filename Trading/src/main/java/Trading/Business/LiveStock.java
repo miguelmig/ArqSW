@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 public class LiveStock implements Subject {
 
 	Map<String, Ativo> ativos;
-	List<Observer> observers;
-	LiveAPI liveAPI;
+	private List<Observer> observers;
+	private LiveAPI liveAPI;
 
 
 	private void initMercado(){
@@ -69,7 +69,6 @@ public class LiveStock implements Subject {
 	}
 
 
-	// FIXME: 19/11/2019 ESTE PREÇO DEVE TER EM CONTA SE O CFD FOI LONG OU SHORT?
 	public float getPrecoAtivo(String id_ativo) {
 		return this.ativos.get(id_ativo).getPrecoCompra();
 	}
